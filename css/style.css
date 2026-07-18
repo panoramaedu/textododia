@@ -1,14 +1,27 @@
 :root {
-    --bordo: #681f2e;
-    --bordo-escuro: #45121e;
-    --verde-champanhe: #d8dfc5;
-    --verde-suave: #eef1e5;
-    --dourado: #c6a15b;
-    --dourado-claro: #e3c986;
+    --bordo: #641f2c;
+    --bordo-escuro: #3d121b;
+    --bordo-claro: #7d3040;
+
+    --verde-champanhe: #dce2ca;
+    --verde-fundo: #edf0e4;
+
+    --dourado: #bd9853;
+    --dourado-claro: #e5ca8d;
+    --dourado-brilho: #f2dfaa;
+
     --papel: #fffdf8;
-    --texto: #302b28;
-    --sombra: rgba(38, 20, 17, 0.22);
+    --papel-sombra: rgba(67, 44, 29, 0.2);
+
+    --texto: #332d2a;
+
+    --envelope-front-height: 170px;
 }
+
+
+/* =========================================
+   RESET
+========================================= */
 
 * {
     margin: 0;
@@ -16,24 +29,30 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     min-height: 100vh;
-
-    background:
-        radial-gradient(
-            circle at top,
-            var(--verde-suave),
-            var(--verde-champanhe)
-        );
 
     color: var(--texto);
 
     font-family: "Nunito Sans", sans-serif;
+
+    background:
+        radial-gradient(
+            ellipse at top,
+            #f3f5ed 0%,
+            var(--verde-fundo) 45%,
+            var(--verde-champanhe) 100%
+        );
 }
 
-button {
-    font: inherit;
-}
+
+/* =========================================
+   APP
+========================================= */
 
 .app {
     min-height: 100vh;
@@ -42,172 +61,195 @@ button {
     flex-direction: column;
     align-items: center;
 
-    padding: 2rem 1rem 1rem;
+    padding: 2rem 1rem 1.5rem;
 }
+
+
+/* =========================================
+   CABEÇALHO
+========================================= */
 
 .site-header {
     text-align: center;
-    margin-bottom: 2rem;
+
+    margin-bottom: 2.5rem;
 }
 
 .site-header h1 {
     color: var(--bordo);
 
     font-family: "Playfair Display", serif;
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
-    letter-spacing: 0.04em;
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    font-weight: 600;
+
+    letter-spacing: 0.03em;
 }
 
 .site-header p {
-    margin-top: 0.35rem;
+    margin-top: 0.4rem;
 
     color: var(--bordo-escuro);
 
-    font-size: 0.95rem;
-    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
 }
 
+
+/* =========================================
+   ÁREA DO ENVELOPE
+========================================= */
+
 .envelope-area {
-    width: min(100%, 900px);
+    width: min(100%, 880px);
 
     display: flex;
     justify-content: center;
+    align-items: flex-start;
 }
+
+
+/* =========================================
+   ENVELOPE
+========================================= */
 
 .envelope {
     position: relative;
 
     width: min(100%, 760px);
-    min-height: 520px;
 
-    perspective: 1200px;
+    height: 520px;
+
+    perspective: 1400px;
+
+    transition:
+        height 0.9s cubic-bezier(.22, .61, .36, 1);
 }
+
+
+/* =========================================
+   FUNDO DO ENVELOPE
+========================================= */
 
 .envelope-back {
     position: absolute;
+
     inset: 0;
 
     background:
         linear-gradient(
-            135deg,
-            #7a2b3b,
-            var(--bordo)
+            145deg,
+            var(--bordo-claro),
+            var(--bordo) 55%,
+            var(--bordo-escuro)
         );
 
     border-radius: 8px;
 
     box-shadow:
-        0 20px 40px var(--sombra);
+        0 22px 45px rgba(55, 26, 23, 0.25),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 
     z-index: 1;
 }
 
-.envelope-front {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
 
-    height: 58%;
-
-    background:
-        linear-gradient(
-            135deg,
-            var(--bordo),
-            var(--bordo-escuro)
-        );
-
-    clip-path: polygon(
-        0 0,
-        50% 60%,
-        100% 0,
-        100% 100%,
-        0 100%
-    );
-
-    z-index: 5;
-
-    pointer-events: none;
-}
-
-.envelope-flap {
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 55%;
-
-    background:
-        linear-gradient(
-            135deg,
-            #8b3547,
-            var(--bordo)
-        );
-
-    clip-path: polygon(
-        0 0,
-        100% 0,
-        50% 100%
-    );
-
-    transform-origin: top center;
-
-    transition:
-        transform 0.8s ease,
-        z-index 0.2s ease;
-
-    z-index: 8;
-
-    pointer-events: none;
-}
-
-.envelope.open .envelope-flap {
-    transform: rotateX(180deg);
-    z-index: 2;
-}
+/* =========================================
+   CARTA
+========================================= */
 
 .letter {
     position: absolute;
 
-    left: 7%;
-    right: 7%;
+    top: 38px;
 
-    bottom: 10%;
+    left: 6%;
+    right: 6%;
 
-    min-height: 440px;
-    max-height: 78vh;
+    height: auto;
 
-    overflow-y: auto;
+    background:
+        /*
+         * Textura sutil de papel branco
+         */
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(100, 82, 55, 0.035) 0 0.7px,
+            transparent 0.9px
+        ),
+        radial-gradient(
+            circle at 75% 65%,
+            rgba(100, 82, 55, 0.025) 0 0.6px,
+            transparent 0.8px
+        ),
+        radial-gradient(
+            circle at 40% 85%,
+            rgba(100, 82, 55, 0.02) 0 0.5px,
+            transparent 0.7px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.8),
+            transparent 4%,
+            transparent 96%,
+            rgba(255, 255, 255, 0.8)
+        ),
+        var(--papel);
 
-    background: var(--papel);
+    background-size:
+        19px 19px,
+        23px 23px,
+        29px 29px,
+        auto,
+        auto;
 
     border-radius: 2px;
 
     box-shadow:
-        0 10px 25px rgba(0, 0, 0, 0.16);
-
-    transform: translateY(0);
-
-    transition:
-        transform 0.9s ease,
-        opacity 0.5s ease;
-
-    z-index: 3;
+        0 12px 25px var(--papel-sombra);
 
     opacity: 0;
+
+    transform:
+        translateY(110px)
+        scale(0.985);
+
+    transform-origin: center bottom;
+
+    transition:
+        opacity 0.4s ease,
+        transform 1.1s cubic-bezier(.22, .61, .36, 1);
+
+    z-index: 3;
 }
 
 .envelope.open .letter {
-    transform: translateY(-36%);
     opacity: 1;
+
+    transform:
+        translateY(-30px)
+        scale(1);
 }
+
+
+/* =========================================
+   CONTEÚDO DA CARTA
+========================================= */
 
 .letter-content {
-    padding: 2.5rem clamp(1.5rem, 5vw, 4rem) 3rem;
+    padding:
+        2.5rem
+        clamp(1.5rem, 6vw, 4.5rem)
+        8rem;
 }
 
+
+/* =========================================
+   DATA
+========================================= */
+
 .text-date {
+    position: relative;
+
     margin-bottom: 2rem;
 
     color: var(--bordo);
@@ -219,6 +261,80 @@ button {
     text-align: center;
 }
 
+.text-date::after {
+    content: "";
+
+    display: block;
+
+    width: 55px;
+    height: 1px;
+
+    margin: 0.7rem auto 0;
+
+    background: var(--dourado);
+}
+
+/* =========================================
+   METADADOS DO TEXTO
+========================================= */
+
+.text-metadata {
+    margin-bottom: 2rem;
+
+    text-align: center;
+}
+
+
+.text-metadata h1 {
+    margin-bottom: 0.6rem;
+
+    color: var(--bordo);
+
+    font-family: "Playfair Display", serif;
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 600;
+
+    line-height: 1.3;
+}
+
+
+.text-author {
+    margin-bottom: 0.55rem;
+
+    color: var(--bordo-escuro);
+
+    font-family: "Playfair Display", serif;
+    font-size: 0.95rem;
+
+    font-style: italic;
+}
+
+
+.text-details {
+    color: var(--dourado);
+
+    font-family: "Nunito Sans", sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+}
+
+
+.text-details span {
+    margin: 0 0.35rem;
+
+    color: var(--bordo);
+
+    font-size: 0.9rem;
+}
+
+/* =========================================
+   TEXTO
+========================================= */
+
 .reading-content {
     line-height: 1.8;
 }
@@ -226,11 +342,12 @@ button {
 .reading-content h1,
 .reading-content h2,
 .reading-content h3 {
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.25rem;
 
     color: var(--bordo);
 
     font-family: "Playfair Display", serif;
+
     line-height: 1.3;
 }
 
@@ -247,12 +364,137 @@ button {
 }
 
 .reading-content p {
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.25rem;
 }
 
 .reading-content strong {
     color: var(--bordo);
 }
+
+
+/* =========================================
+   EMBLEMA TTD
+========================================= */
+
+.letter-signature {
+    margin-top: 5rem;
+
+    color: var(--bordo);
+
+    font-family: "Playfair Display", serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+
+    letter-spacing: 0.3em;
+
+    text-align: center;
+
+    opacity: 0.8;
+}
+
+.letter-signature::before {
+    content: "";
+
+    display: block;
+
+    width: 45px;
+    height: 1px;
+
+    margin: 0 auto 1rem;
+
+    background: var(--dourado);
+}
+
+
+/* =========================================
+   FRENTE DO ENVELOPE
+========================================= */
+
+.envelope-front {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: var(--envelope-front-height);
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--bordo),
+            var(--bordo-escuro)
+        );
+
+    clip-path: polygon(
+        0 0,
+        50% 61%,
+        100% 0,
+        100% 100%,
+        0 100%
+    );
+
+    z-index: 5;
+
+    pointer-events: none;
+
+    transition:
+        transform 0.8s ease;
+}
+
+.envelope.open .envelope-front {
+    transform:
+        translateY(12px);
+}
+
+
+/* =========================================
+   ABA SUPERIOR
+========================================= */
+
+.envelope-flap {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 56%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #8b3547,
+            var(--bordo)
+        );
+
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        50% 100%
+    );
+
+    transform-origin: top center;
+
+    transition:
+        transform 0.95s cubic-bezier(.22, .61, .36, 1);
+
+    z-index: 8;
+
+    pointer-events: none;
+}
+
+.envelope.open .envelope-flap {
+    transform:
+        rotateX(180deg);
+
+    z-index: 2;
+}
+
+
+/* =========================================
+   CONTROLES
+========================================= */
 
 .envelope-controls {
     position: absolute;
@@ -261,7 +503,7 @@ button {
     right: 0;
     bottom: 0;
 
-    min-height: 43%;
+    height: var(--envelope-front-height);
 
     display: flex;
     flex-direction: column;
@@ -270,10 +512,15 @@ button {
 
     gap: 1rem;
 
-    padding: 1.2rem 1rem 1.6rem;
+    padding: 1rem 1rem 1.5rem;
 
     z-index: 10;
 }
+
+
+/* =========================================
+   SELOS EDITORIAIS
+========================================= */
 
 .level-selection {
     width: 100%;
@@ -281,77 +528,307 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+
+    gap: 0.8rem;
+
+    flex-wrap: wrap;
 }
 
+
+/* =========================================
+   SELO
+========================================= */
+
 .level-seal {
-    width: 150px;
-    min-height: 80px;
+    position: relative;
+
+    width: 138px;
+    min-height: 82px;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    padding: 0.8rem;
+    padding: 0.75rem 0.6rem;
 
-    border: 2px solid transparent;
-    border-radius: 50%;
+    border: 1px solid rgba(79, 49, 19, 0.65);
 
     background:
+        /*
+         * Base da tinta
+         */
+        linear-gradient(
+            135deg,
+            #e8d39a 0%,
+            var(--dourado) 48%,
+            #a77d3e 100%
+        ),
+
+        /*
+         * Textura de impressão
+         */
         radial-gradient(
-            circle,
-            var(--dourado-claro),
-            var(--dourado)
+            circle at 10% 20%,
+            rgba(73, 45, 17, 0.22) 0 0.7px,
+            transparent 0.9px
+        ),
+        radial-gradient(
+            circle at 70% 60%,
+            rgba(73, 45, 17, 0.16) 0 0.6px,
+            transparent 0.8px
+        ),
+        radial-gradient(
+            circle at 35% 85%,
+            rgba(255, 255, 255, 0.16) 0 0.5px,
+            transparent 0.7px
         );
+
+    background-size:
+        auto,
+        7px 7px,
+        9px 9px,
+        11px 11px;
 
     color: var(--bordo-escuro);
 
     cursor: pointer;
 
+    clip-path: polygon(
+        4% 0,
+        96% 0,
+        100% 8%,
+        100% 92%,
+        96% 100%,
+        4% 100%,
+        0 92%,
+        0 8%
+    );
+
     box-shadow:
-        0 4px 8px rgba(0, 0, 0, 0.18),
-        inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.3);
 
     transition:
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease;
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        filter 0.3s ease;
 }
+
+
+/* =========================================
+   BORDA INTERNA DO SELO
+========================================= */
+
+.level-seal::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 5px;
+
+    border: 1px solid rgba(73, 45, 17, 0.45);
+
+    clip-path: polygon(
+        4% 0,
+        96% 0,
+        100% 8%,
+        100% 92%,
+        96% 100%,
+        4% 100%,
+        0 92%,
+        0 8%
+    );
+
+    pointer-events: none;
+}
+
+
+/* =========================================
+   MARCAS EDITORIAIS DOS SELOS
+========================================= */
+
+.level-seal::after {
+    position: absolute;
+
+    top: 5px;
+    right: 9px;
+
+    color: rgba(75, 44, 15, 0.58);
+
+    font-family: "Playfair Display", serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    line-height: 1;
+}
+
+
+/* =========================================
+   NÍVEL 1 — PENA
+========================================= */
+
+.level-seal:nth-child(1)::after {
+    content: "✒";
+}
+
+
+/* =========================================
+   NÍVEL 2 — ESTRELA
+========================================= */
+
+.level-seal:nth-child(2)::after {
+    content: "✦";
+}
+
+
+/* =========================================
+   NÍVEL 3 — LIVRO
+========================================= */
+
+.level-seal:nth-child(3)::after {
+    content: "▤";
+}
+
+
+/* =========================================
+   NÍVEL 4 — MONOGRAMA
+========================================= */
+
+.level-seal:nth-child(4)::after {
+    content: "TTD";
+
+    font-size: 0.48rem;
+
+    letter-spacing: 0.05em;
+}
+
+
+/* =========================================
+   HOVER
+========================================= */
 
 .level-seal:hover {
-    transform: translateY(-4px);
-}
+    transform:
+        translateY(-4px)
+        rotate(-1deg);
 
-.level-seal.selected {
-    border-color: #fff4c7;
+    filter: brightness(1.06);
 
     box-shadow:
-        0 0 0 3px var(--dourado),
-        0 6px 14px rgba(0, 0, 0, 0.25);
+        0 8px 15px rgba(0, 0, 0, 0.25),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.35);
 }
 
+
+/* =========================================
+   SELO SELECIONADO
+========================================= */
+
+.level-seal.selected {
+    border-color: var(--dourado-brilho);
+
+    transform:
+        translateY(-3px)
+        rotate(0deg);
+
+    box-shadow:
+        0 0 0 2px var(--dourado),
+        0 0 0 4px rgba(189, 152, 83, 0.35),
+        0 8px 18px rgba(0, 0, 0, 0.3);
+
+    filter: brightness(1.08);
+}
+
+
+/* =========================================
+   SÍMBOLO DO SELO SELECIONADO
+========================================= */
+
+.level-seal.selected::after {
+    color: var(--bordo);
+
+    transform: scale(1.15);
+
+    opacity: 0.9;
+}
+
+
+/* =========================================
+   NÚMERO DO NÍVEL
+========================================= */
+
 .seal-number {
+    position: relative;
+
+    z-index: 1;
+
+    color: var(--bordo-escuro);
+
     font-family: "Playfair Display", serif;
     font-size: 1rem;
     font-weight: 700;
+
+    letter-spacing: 0.03em;
+
+    text-shadow:
+        0 1px rgba(255, 255, 255, 0.35);
 }
 
-.seal-description {
-    margin-top: 0.2rem;
 
-    font-size: 0.7rem;
-    line-height: 1.2;
+/* =========================================
+   DESCRIÇÃO
+========================================= */
+
+.seal-description {
+    position: relative;
+
+    z-index: 1;
+
+    margin-top: 0.25rem;
+
+    max-width: 105px;
+
+    color: rgba(61, 18, 27, 0.85);
+
+    font-size: 0.65rem;
+    line-height: 1.25;
+
     text-align: center;
 }
 
-.read-button {
-    min-width: 150px;
 
-    padding: 0.8rem 2rem;
+/* =========================================
+   MARCA CENTRAL DO SELO SELECIONADO
+========================================= */
+
+.level-seal.selected .seal-number::after {
+    content: "";
+
+    display: block;
+
+    width: 28px;
+    height: 1px;
+
+    margin: 0.25rem auto 0;
+
+    background: var(--bordo);
+
+    opacity: 0.7;
+}
+
+
+/* =========================================
+   BOTÃO
+========================================= */
+
+.read-button {
+    min-width: 145px;
+
+    padding: 0.75rem 1.8rem;
 
     border: 1px solid var(--dourado-claro);
-    border-radius: 4px;
+    border-radius: 3px;
 
     background: var(--bordo);
 
@@ -370,13 +847,20 @@ button {
 
 .read-button:hover:not(:disabled) {
     background: var(--bordo-escuro);
+
     transform: translateY(-2px);
 }
 
 .read-button:disabled {
-    cursor: not-allowed;
     opacity: 0.45;
+
+    cursor: not-allowed;
 }
+
+
+/* =========================================
+   BOTÃO APÓS ABRIR
+========================================= */
 
 .envelope.open .level-selection {
     display: none;
@@ -384,28 +868,22 @@ button {
 
 .envelope.open .read-button {
     min-width: 190px;
-}
 
-.envelope.open .read-button::after {
-    content: "Ler outro texto";
-}
-
-.envelope.open .read-button {
     font-size: 0;
 }
 
 .envelope.open .read-button::after {
+    content: "Ler outro texto";
+
     font-size: 1rem;
 }
 
-.site-footer {
-    margin-top: auto;
-    padding-top: 2rem;
+/* =========================================
+   TIPOGRAFIA POR NÍVEL
+========================================= */
 
-    color: var(--bordo);
-
-    font-family: "Playfair Display", serif;
-    font-size: 0.85rem;
+.envelope.level-1 .reading-content {
+    font-family: "Momo Signature", cursive;
 }
 
 /* =========================================
@@ -414,21 +892,37 @@ button {
 
 .envelope.level-1-active .reading-content {
     font-family: "Patrick Hand", cursive;
+
     font-size: 1.45rem;
 }
 
-.envelope.level-2-active .reading-content,
+.envelope.level-2-active .reading-content {
+    font-family: "Nunito Sans", sans-serif;
+
+    font-size: 1.05rem;
+
+    line-height: 1.8;
+}
+
 .envelope.level-3-active .reading-content {
     font-family: "Nunito Sans", sans-serif;
-}
 
-.envelope.level-2-active .reading-content {
-    font-size: 1.05rem;
-}
-
-.envelope.level-3-active .reading-content {
     font-size: 1rem;
+
+    line-height: 1.85;
 }
+
+.envelope.level-4-active .reading-content {
+    font-family: "Nunito Sans", sans-serif;
+
+    font-size: 0.98rem;
+
+    line-height: 1.95;
+
+    letter-spacing: 0.01em;
+}
+
+
 
 /* =========================================
    ERRO
@@ -447,76 +941,147 @@ button {
 
 .reading-error h2 {
     margin-bottom: 1rem;
+
+    color: var(--bordo);
 }
+
+
+/* =========================================
+   RODAPÉ
+========================================= */
+
+.site-footer {
+    width: 100%;
+
+    margin-top: auto;
+
+    padding-top: 2rem;
+
+    color: var(--bordo);
+
+    font-family: "Playfair Display", serif;
+    font-size: 0.85rem;
+
+    text-align: center;
+}
+
+.site-footer p {
+    margin: 0.3rem 0;
+}
+
+.site-footer strong {
+    font-weight: 700;
+}
+
+.site-footer a {
+    color: var(--bordo);
+
+    text-decoration: none;
+
+    transition:
+        color 0.25s ease,
+        opacity 0.25s ease;
+}
+
+.site-footer a:hover {
+    color: var(--bordo-escuro);
+
+    text-decoration: underline;
+}
+
+.donation-message {
+    margin-top: 0.7rem !important;
+}
+
+.donation-message a {
+    display: inline-block;
+
+    padding-bottom: 2px;
+
+    border-bottom: 1px solid var(--dourado);
+
+    color: var(--bordo);
+
+    font-size: 0.8rem;
+
+    opacity: 0.9;
+}
+
+.donation-message a:hover {
+    color: var(--bordo-escuro);
+
+    opacity: 1;
+}
+
 
 /* =========================================
    RESPONSIVIDADE
 ========================================= */
 
-@media (max-width: 650px) {
+@media (max-width: 700px) {
 
     .app {
-        padding: 1.5rem 0.75rem 1rem;
+        padding: 1.5rem 0.7rem 1rem;
     }
 
     .site-header {
-        margin-bottom: 1.5rem;
-    }
-
-    .envelope {
-        min-height: 570px;
-    }
-
-    .letter {
-        left: 4%;
-        right: 4%;
-        bottom: 8%;
-    }
-
-    .envelope.open .letter {
-        transform: translateY(-30%);
+        margin-bottom: 1.8rem;
     }
 
     .level-selection {
-        gap: 0.35rem;
+        gap: 0.4rem;
     }
 
     .level-seal {
-        width: 31vw;
-        max-width: 135px;
-        min-height: 75px;
+        width: 22vw;
+
+        min-width: 105px;
+        max-width: 138px;
+
+        min-height: 76px;
     }
 
     .seal-number {
-        font-size: 0.85rem;
+        font-size: 0.82rem;
     }
 
     .seal-description {
-        font-size: 0.62rem;
+        font-size: 0.58rem;
     }
 
     .letter-content {
-        padding: 2rem 1.25rem 2.5rem;
+        padding:
+            2rem
+            1.3rem
+            8rem;
     }
-
-    .envelope-controls {
-        padding-bottom: 1.2rem;
-    }
-
 }
 
-@media (max-width: 400px) {
+
+@media (max-width: 440px) {
+
+    :root {
+        --envelope-front-height: 180px;
+    }
+
+    .level-selection {
+        gap: 0.25rem;
+    }
 
     .level-seal {
+        width: 22vw;
+
+        min-width: 78px;
+
         min-height: 68px;
     }
 
     .seal-number {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
     }
 
     .seal-description {
-        font-size: 0.55rem;
+        font-size: 0.5rem;
     }
-
 }
+

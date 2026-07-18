@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Textododia</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <main class="app">
+
+        <header class="site-header">
+            <h1>Textododia</h1>
+            <p>Uma leitura para cada dia.</p>
+        </header>
+
+        <section class="envelope-area">
+
+            <div class="envelope">
+
+                <div class="envelope-back"></div>
+
+                <article class="letter" id="letter">
+
+                    <div class="letter-content">
+
+                        <div class="text-date" id="text-date"></div>
+
+                        <div class="reading-content" id="reading-content"></div>
+
+                    </div>
+
+                </article>
+
+                <div class="envelope-front"></div>
+
+                <div class="envelope-flap"></div>
+
+                <div class="envelope-controls" id="envelope-controls">
+
+                    <div class="level-selection" id="level-selection">
+
+                        <button class="level-seal level-1" data-level="nivel-1">
+                            <span class="seal-number">Nível 1</span>
+                            <span class="seal-description">
+                                Leitura inicial
+                            </span>
+                        </button>
+
+                        <button class="level-seal level-2" data-level="nivel-2">
+                            <span class="seal-number">Nível 2</span>
+                            <span class="seal-description">
+                                Leitura intermediária
+                            </span>
+                        </button>
+
+                        <button class="level-seal level-3" data-level="nivel-3">
+                            <span class="seal-number">Nível 3</span>
+                            <span class="seal-description">
+                                Leitura avançada
+                            </span>
+                        </button>
+
+                    </div>
+
+                    <button class="read-button" id="read-button" disabled>
+                        Ler
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <footer class="site-footer">
+            <p>Textododia</p>
+        </footer>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script type="module" src="js/app.js"></script>
+
+</body>
+</html>

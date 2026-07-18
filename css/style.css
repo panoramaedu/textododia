@@ -1,0 +1,522 @@
+:root {
+    --bordo: #681f2e;
+    --bordo-escuro: #45121e;
+    --verde-champanhe: #d8dfc5;
+    --verde-suave: #eef1e5;
+    --dourado: #c6a15b;
+    --dourado-claro: #e3c986;
+    --papel: #fffdf8;
+    --texto: #302b28;
+    --sombra: rgba(38, 20, 17, 0.22);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at top,
+            var(--verde-suave),
+            var(--verde-champanhe)
+        );
+
+    color: var(--texto);
+
+    font-family: "Nunito Sans", sans-serif;
+}
+
+button {
+    font: inherit;
+}
+
+.app {
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 2rem 1rem 1rem;
+}
+
+.site-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.site-header h1 {
+    color: var(--bordo);
+
+    font-family: "Playfair Display", serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    letter-spacing: 0.04em;
+}
+
+.site-header p {
+    margin-top: 0.35rem;
+
+    color: var(--bordo-escuro);
+
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+}
+
+.envelope-area {
+    width: min(100%, 900px);
+
+    display: flex;
+    justify-content: center;
+}
+
+.envelope {
+    position: relative;
+
+    width: min(100%, 760px);
+    min-height: 520px;
+
+    perspective: 1200px;
+}
+
+.envelope-back {
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #7a2b3b,
+            var(--bordo)
+        );
+
+    border-radius: 8px;
+
+    box-shadow:
+        0 20px 40px var(--sombra);
+
+    z-index: 1;
+}
+
+.envelope-front {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 58%;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--bordo),
+            var(--bordo-escuro)
+        );
+
+    clip-path: polygon(
+        0 0,
+        50% 60%,
+        100% 0,
+        100% 100%,
+        0 100%
+    );
+
+    z-index: 5;
+
+    pointer-events: none;
+}
+
+.envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 55%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b3547,
+            var(--bordo)
+        );
+
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        50% 100%
+    );
+
+    transform-origin: top center;
+
+    transition:
+        transform 0.8s ease,
+        z-index 0.2s ease;
+
+    z-index: 8;
+
+    pointer-events: none;
+}
+
+.envelope.open .envelope-flap {
+    transform: rotateX(180deg);
+    z-index: 2;
+}
+
+.letter {
+    position: absolute;
+
+    left: 7%;
+    right: 7%;
+
+    bottom: 10%;
+
+    min-height: 440px;
+    max-height: 78vh;
+
+    overflow-y: auto;
+
+    background: var(--papel);
+
+    border-radius: 2px;
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.16);
+
+    transform: translateY(0);
+
+    transition:
+        transform 0.9s ease,
+        opacity 0.5s ease;
+
+    z-index: 3;
+
+    opacity: 0;
+}
+
+.envelope.open .letter {
+    transform: translateY(-36%);
+    opacity: 1;
+}
+
+.letter-content {
+    padding: 2.5rem clamp(1.5rem, 5vw, 4rem) 3rem;
+}
+
+.text-date {
+    margin-bottom: 2rem;
+
+    color: var(--bordo);
+
+    font-family: "Playfair Display", serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+
+    text-align: center;
+}
+
+.reading-content {
+    line-height: 1.8;
+}
+
+.reading-content h1,
+.reading-content h2,
+.reading-content h3 {
+    margin-bottom: 1.2rem;
+
+    color: var(--bordo);
+
+    font-family: "Playfair Display", serif;
+    line-height: 1.3;
+}
+
+.reading-content h1 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+}
+
+.reading-content h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.reading-content h3 {
+    font-size: 1.4rem;
+}
+
+.reading-content p {
+    margin-bottom: 1.2rem;
+}
+
+.reading-content strong {
+    color: var(--bordo);
+}
+
+.envelope-controls {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    min-height: 43%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 1rem;
+
+    padding: 1.2rem 1rem 1.6rem;
+
+    z-index: 10;
+}
+
+.level-selection {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.level-seal {
+    width: 150px;
+    min-height: 80px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0.8rem;
+
+    border: 2px solid transparent;
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            var(--dourado-claro),
+            var(--dourado)
+        );
+
+    color: var(--bordo-escuro);
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.18),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.2);
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.level-seal:hover {
+    transform: translateY(-4px);
+}
+
+.level-seal.selected {
+    border-color: #fff4c7;
+
+    box-shadow:
+        0 0 0 3px var(--dourado),
+        0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.seal-number {
+    font-family: "Playfair Display", serif;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.seal-description {
+    margin-top: 0.2rem;
+
+    font-size: 0.7rem;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.read-button {
+    min-width: 150px;
+
+    padding: 0.8rem 2rem;
+
+    border: 1px solid var(--dourado-claro);
+    border-radius: 4px;
+
+    background: var(--bordo);
+
+    color: #fff;
+
+    font-family: "Playfair Display", serif;
+    font-size: 1rem;
+
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease,
+        opacity 0.25s ease;
+}
+
+.read-button:hover:not(:disabled) {
+    background: var(--bordo-escuro);
+    transform: translateY(-2px);
+}
+
+.read-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.envelope.open .level-selection {
+    display: none;
+}
+
+.envelope.open .read-button {
+    min-width: 190px;
+}
+
+.envelope.open .read-button::after {
+    content: "Ler outro texto";
+}
+
+.envelope.open .read-button {
+    font-size: 0;
+}
+
+.envelope.open .read-button::after {
+    font-size: 1rem;
+}
+
+.site-footer {
+    margin-top: auto;
+    padding-top: 2rem;
+
+    color: var(--bordo);
+
+    font-family: "Playfair Display", serif;
+    font-size: 0.85rem;
+}
+
+/* =========================================
+   NÍVEIS DE LEITURA
+========================================= */
+
+.envelope.level-1-active .reading-content {
+    font-family: "Patrick Hand", cursive;
+    font-size: 1.45rem;
+}
+
+.envelope.level-2-active .reading-content,
+.envelope.level-3-active .reading-content {
+    font-family: "Nunito Sans", sans-serif;
+}
+
+.envelope.level-2-active .reading-content {
+    font-size: 1.05rem;
+}
+
+.envelope.level-3-active .reading-content {
+    font-size: 1rem;
+}
+
+/* =========================================
+   ERRO
+========================================= */
+
+.reading-error {
+    min-height: 240px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.reading-error h2 {
+    margin-bottom: 1rem;
+}
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 650px) {
+
+    .app {
+        padding: 1.5rem 0.75rem 1rem;
+    }
+
+    .site-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .envelope {
+        min-height: 570px;
+    }
+
+    .letter {
+        left: 4%;
+        right: 4%;
+        bottom: 8%;
+    }
+
+    .envelope.open .letter {
+        transform: translateY(-30%);
+    }
+
+    .level-selection {
+        gap: 0.35rem;
+    }
+
+    .level-seal {
+        width: 31vw;
+        max-width: 135px;
+        min-height: 75px;
+    }
+
+    .seal-number {
+        font-size: 0.85rem;
+    }
+
+    .seal-description {
+        font-size: 0.62rem;
+    }
+
+    .letter-content {
+        padding: 2rem 1.25rem 2.5rem;
+    }
+
+    .envelope-controls {
+        padding-bottom: 1.2rem;
+    }
+
+}
+
+@media (max-width: 400px) {
+
+    .level-seal {
+        min-height: 68px;
+    }
+
+    .seal-number {
+        font-size: 0.75rem;
+    }
+
+    .seal-description {
+        font-size: 0.55rem;
+    }
+
+}

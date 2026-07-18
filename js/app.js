@@ -4,9 +4,11 @@ import {
     formatDate
 } from "./calendar.js";
 
+
 import {
     loadTextMetadata
 } from "./metadata.js";
+
 
 import {
     openEnvelope,
@@ -15,31 +17,45 @@ import {
 
 
 const envelope =
-    document.querySelector(".envelope");
+    document.querySelector(
+        ".envelope"
+    );
 
 
 const letter =
-    document.querySelector("#letter");
+    document.querySelector(
+        "#letter"
+    );
 
 
 const levelButtons =
-    document.querySelectorAll(".level-seal");
+    document.querySelectorAll(
+        ".level-seal"
+    );
 
 
 const readButton =
-    document.querySelector("#read-button");
+    document.querySelector(
+        "#read-button"
+    );
 
 
 const readingContent =
-    document.querySelector("#reading-content");
+    document.querySelector(
+        "#reading-content"
+    );
 
 
 const textDate =
-    document.querySelector("#text-date");
+    document.querySelector(
+        "#text-date"
+    );
 
 
 const textMetadata =
-    document.querySelector("#text-metadata");
+    document.querySelector(
+        "#text-metadata"
+    );
 
 
 let selectedLevel =
@@ -50,19 +66,20 @@ let envelopeOpen =
     false;
 
 
+const CLOSED_ENVELOPE_HEIGHT =
+    520;
+
+
+const FRONT_HEIGHT =
+    170;
+
+
+const LETTER_TOP_GAP =
+    30;
+
+
 /* =========================================
-   CONFIGURAÇÃO
-========================================= */
-
-const CLOSED_ENVELOPE_HEIGHT = 520;
-
-const FRONT_HEIGHT = 170;
-
-const LETTER_TOP_GAP = 30;
-
-
-/* =========================================
-   DATA ATUAL
+   DATA
 ========================================= */
 
 const currentDate =
@@ -82,10 +99,11 @@ textDate.textContent =
 
 
 /* =========================================
-   CALCULA A ALTURA DO ENVELOPE
+   ALTURA DO ENVELOPE
 ========================================= */
 
 function calculateEnvelopeHeight() {
+
 
     const letterHeight =
         letter.offsetHeight;
@@ -98,21 +116,29 @@ function calculateEnvelopeHeight() {
 
 
     return Math.max(
+
         CLOSED_ENVELOPE_HEIGHT,
+
         requiredHeight
+
     );
 
 }
 
 
 /* =========================================
-   CENTRALIZA O ENVELOPE
+   CENTRALIZAÇÃO
 ========================================= */
 
 function centerEnvelope() {
 
-    if (!envelopeOpen) {
+
+    if (
+        !envelopeOpen
+    ) {
+
         return;
+
     }
 
 
@@ -122,7 +148,7 @@ function centerEnvelope() {
 
     const envelopeCenter =
         envelopeRect.top +
-        (envelopeRect.height / 2);
+        envelopeRect.height / 2;
 
 
     const viewportCenter =
@@ -146,6 +172,7 @@ function centerEnvelope() {
 
 function resetEnvelopePosition() {
 
+
     envelope.style.transform =
         "";
 
@@ -153,28 +180,26 @@ function resetEnvelopePosition() {
 
 
 /* =========================================
-   AJUSTA A ALTURA
+   AJUSTA ALTURA
 ========================================= */
 
 function resizeEnvelope() {
 
-    const newHeight =
-        calculateEnvelopeHeight();
-
 
     envelope.style.height =
-        `${newHeight}px`;
+        `${calculateEnvelopeHeight()}px`;
 
 }
 
 
 /* =========================================
-   EXIBE METADADOS
+   METADADOS
 ========================================= */
 
 function displayMetadata(
     text
 ) {
+
 
     textMetadata.innerHTML = `
 
@@ -188,7 +213,9 @@ function displayMetadata(
 
         <p class="text-details">
             ${text.genre}
+
             <span>·</span>
+
             ${text.theme}
         </p>
 
@@ -197,11 +224,8 @@ function displayMetadata(
 }
 
 
-/* =========================================
-   LIMPA METADADOS
-========================================= */
-
 function clearMetadata() {
+
 
     textMetadata.innerHTML =
         "";
@@ -210,54 +234,61 @@ function clearMetadata() {
 
 
 /* =========================================
-   SELEÇÃO DE NÍVEL
+   SELEÇÃO DO NÍVEL
 ========================================= */
 
-levelButtons.forEach(button => {
-
-    button.addEventListener(
-        "click",
-        () => {
+levelButtons.forEach(
+    button => {
 
 
-            levelButtons.forEach(
-                levelButton => {
-
-                    levelButton.classList.remove(
-                        "selected"
-                    );
-
-                }
-            );
+        button.addEventListener(
+            "click",
+            () => {
 
 
-            button.classList.add(
-                "selected"
-            );
+                levelButtons.forEach(
+                    item => {
+
+                        item.classList.remove(
+                            "selected"
+                        );
+
+                    }
+                );
 
 
-            selectedLevel =
-                button.dataset.level;
+                button.classList.add(
+                    "selected"
+                );
 
 
-            readButton.disabled =
-                false;
+                selectedLevel =
+                    button.dataset.level;
 
-        }
-    );
 
-});
+                readButton.disabled =
+                    false;
+
+            }
+        );
+
+    }
+);
 
 
 /* =========================================
-   ABRIR A CARTA
+   ABRIR CARTA
 ========================================= */
 
 async function openLetter() {
 
 
-    if (!selectedLevel) {
+    if (
+        !selectedLevel
+    ) {
+
         return;
+
     }
 
 
@@ -267,7 +298,7 @@ async function openLetter() {
         readingContent.innerHTML = `
 
             <p>
-                Abrindo a correspondência de hoje...
+                Abrindo a correspondência de hoje.
             </p>
 
         `;
@@ -276,10 +307,6 @@ async function openLetter() {
         clearMetadata();
 
 
-        /*
-         * CARREGA TEXTO + METADADOS
-         */
-
         const text =
             await loadTextMetadata(
                 selectedLevel,
@@ -287,59 +314,27 @@ async function openLetter() {
             );
 
 
-        /*
-         * EXIBE METADADOS
-         */
-
         displayMetadata(
             text
         );
 
 
-        /*
-         * EXIBE CONTEÚDO
-         */
-
         readingContent.innerHTML =
             text.content;
 
 
-        /*
-         * CALCULA ALTURA REAL
-         */
-
         resizeEnvelope();
 
 
-        /*
-         * ABRE ENVELOPE
-         */
-
-        envelope.classList.remove(
-    "level-1",
-    "level-2",
-    "level-3",
-    "level-4"
-);
-
-envelope.classList.add(
-    selectedLevel
-);
-
-
-openEnvelope(
-    envelope,
-    selectedLevel
-);
+        openEnvelope(
+            envelope,
+            selectedLevel
+        );
 
 
         envelopeOpen =
             true;
 
-
-        /*
-         * CENTRALIZA CARTA
-         */
 
         requestAnimationFrame(
             () => {
@@ -350,11 +345,12 @@ openEnvelope(
         );
 
 
-    } catch (error) {
+    } catch (
+        error
+    ) {
 
 
         console.error(
-            "Erro ao carregar texto:",
             error
         );
 
@@ -408,7 +404,7 @@ openEnvelope(
 
 
 /* =========================================
-   FECHAR A CARTA
+   FECHAR CARTA
 ========================================= */
 
 function closeLetter() {
@@ -459,7 +455,7 @@ function closeLetter() {
 
 
 /* =========================================
-   BOTÃO PRINCIPAL
+   BOTÃO
 ========================================= */
 
 readButton.addEventListener(
@@ -467,7 +463,9 @@ readButton.addEventListener(
     async () => {
 
 
-        if (envelopeOpen) {
+        if (
+            envelopeOpen
+        ) {
 
             closeLetter();
 
@@ -483,7 +481,7 @@ readButton.addEventListener(
 
 
 /* =========================================
-   REDIMENSIONAMENTO
+   RESPONSIVIDADE
 ========================================= */
 
 window.addEventListener(
@@ -491,8 +489,12 @@ window.addEventListener(
     () => {
 
 
-        if (!envelopeOpen) {
+        if (
+            !envelopeOpen
+        ) {
+
             return;
+
         }
 
 

@@ -1,29 +1,48 @@
-export function openEnvelope(envelope, level) {
+export function openEnvelope(
+    envelope,
+    level
+) {
+
 
     envelope.classList.remove(
-        "level-1-active",
-        "level-2-active",
-        "level-3-active",
-        "level-4-active"
+
+        "nivel-1",
+        "nivel-2",
+        "nivel-3",
+        "nivel-4"
+
     );
 
 
     envelope.classList.add(
-        "open",
-        `level-${level}-active`
+        level
+    );
+
+
+    envelope.classList.add(
+        "open"
     );
 
 }
 
 
-export function closeEnvelope(envelope) {
+export function closeEnvelope(
+    envelope
+) {
+
 
     envelope.classList.remove(
-        "open",
-        "level-1-active",
-        "level-2-active",
-        "level-3-active",
-        "level-4-active"
+        "open"
+    );
+
+
+    envelope.classList.remove(
+
+        "nivel-1",
+        "nivel-2",
+        "nivel-3",
+        "nivel-4"
+
     );
 
 }

@@ -1,38 +1,73 @@
 export function getCurrentDate() {
+
     return new Date();
+
 }
 
-export function getDayOfYear(date) {
-    const start = new Date(date.getFullYear(), 0, 0);
 
-    const difference =
-        date - start +
-        ((start.getTimezoneOffset() - date.getTimezoneOffset()) * 60 * 1000);
+export function getTextDay(
+    date
+) {
 
-    const oneDay = 1000 * 60 * 60 * 24;
+    const month =
+        date.getMonth();
 
-    return Math.floor(difference / oneDay);
-}
 
-export function getTextDay(date) {
+    const day =
+        date.getDate();
 
-    const dayOfYear = getDayOfYear(date);
 
-    const isLeapYear =
-        new Date(date.getFullYear(), 1, 29).getMonth() === 1;
+    /*
+     * 29 DE FEVEREIRO
+     * USA O TEXTO 366
+     */
 
-    if (isLeapYear && dayOfYear === 60) {
+    if (
+        month === 1 &&
+        day === 29
+    ) {
+
         return 366;
+
     }
 
-    return dayOfYear;
+
+    const start =
+        new Date(
+            date.getFullYear(),
+            0,
+            1
+        );
+
+
+    const difference =
+        date - start;
+
+
+    const oneDay =
+        1000 *
+        60 *
+        60 *
+        24;
+
+
+    return Math.floor(
+        difference / oneDay
+    ) + 1;
+
 }
 
-export function formatDate(date) {
 
-    return new Intl.DateTimeFormat("pt-BR", {
-        day: "numeric",
-        month: "long"
-    }).format(date);
+export function formatDate(
+    date
+) {
+
+    return new Intl.DateTimeFormat(
+        "pt-BR",
+        {
+            day: "numeric",
+            month: "long"
+        }
+    ).format(date);
 
 }

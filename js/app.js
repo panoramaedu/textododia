@@ -24,6 +24,11 @@ import {
 } from "./offline.js";
 
 
+import {
+    shareTextImage
+} from "./share.js";
+
+
 /* =========================================
    ELEMENTOS
 ========================================= */
@@ -106,6 +111,12 @@ const offlineStatus =
     );
 
 
+const shareButton =
+    document.querySelector(
+        "#share-button"
+    );
+
+
 /* =========================================
    ESTADO
 ========================================= */
@@ -116,6 +127,10 @@ let selectedLevel =
 
 let envelopeOpen =
     false;
+
+
+let currentText =
+    null;
 
 
 /* =========================================
@@ -357,6 +372,10 @@ async function openLetter() {
             );
 
 
+        currentText =
+            text;
+
+
         displayMetadata(
             text
         );
@@ -366,19 +385,8 @@ async function openLetter() {
             text.content;
 
 
-        envelope.classList.remove(
-
-            "level-1",
-            "level-2",
-            "level-3",
-            "level-4"
-
-        );
-
-
-        envelope.classList.add(
-            selectedLevel
-        );
+        shareButton.disabled =
+            false;
 
 
         resizeEnvelope();
@@ -414,6 +422,14 @@ async function openLetter() {
 
 
         clearMetadata();
+
+
+        currentText =
+            null;
+
+
+        shareButton.disabled =
+            true;
 
 
         readingContent.innerHTML = `
@@ -489,6 +505,14 @@ function closeLetter() {
 
 
     clearMetadata();
+
+
+    currentText =
+        null;
+
+
+    shareButton.disabled =
+        true;
 
 
     envelope.classList.remove(
@@ -624,6 +648,85 @@ menuClose.addEventListener(
 menuOverlay.addEventListener(
     "click",
     closeMenu
+);
+
+
+/* =========================================
+   COMPARTILHAR
+========================================= */
+
+shareButton.addEventListener(
+    "click",
+    async () => {
+
+
+        if (
+            !currentText
+        ) {
+
+            return;
+
+        }
+
+
+        const originalLabel =
+            shareButton.textContent;
+
+
+        shareButton.disabled =
+            true;
+
+
+        shareButton.textContent =
+            "Gerando imagem...";
+
+
+        try {
+
+
+            await shareTextImage({
+
+                title:
+                    currentText.title,
+
+                author:
+                    currentText.author,
+
+                genre:
+                    currentText.genre,
+
+                theme:
+                    currentText.theme,
+
+                excerpt:
+                    currentText.excerpt,
+
+                url:
+                    window.location.href
+
+            });
+
+
+        } catch (
+            error
+        ) {
+
+
+            console.error(
+                error
+            );
+
+        }
+
+
+        shareButton.textContent =
+            originalLabel;
+
+
+        shareButton.disabled =
+            !currentText;
+
+    }
 );
 
 

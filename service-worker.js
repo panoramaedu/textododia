@@ -14,8 +14,12 @@ const CORE_ASSETS = [
     "./js/metadata.js",
     "./js/envelope.js",
     "./js/offline.js",
+    "./js/share.js",
 
-    "./manifest.json"
+    "./manifest.json",
+
+    "./icons/icon-192.png",
+    "./icons/icon-512.png"
 
 ];
 

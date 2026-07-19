@@ -13,6 +13,19 @@
     <title>Textododia</title>
 
 
+    <!-- PWA -->
+
+    <link
+        rel="manifest"
+        href="manifest.json"
+    >
+
+    <meta
+        name="theme-color"
+        content="#641f2c"
+    >
+
+
     <!-- FONTES -->
 
     <link
@@ -50,13 +63,33 @@
 
         <header class="site-header">
 
-            <h1>
-                Textododia
-            </h1>
+            <div class="site-header-content">
 
-            <p>
-                Uma leitura para cada dia.
-            </p>
+                <h1>
+                    Textododia
+                </h1>
+
+                <p>
+                    Uma leitura para cada dia.
+                </p>
+
+            </div>
+
+
+            <button
+                class="menu-button"
+                id="menu-button"
+                type="button"
+                aria-label="Abrir menu"
+                aria-expanded="false"
+                aria-controls="side-menu"
+            >
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </button>
 
         </header>
 
@@ -258,10 +291,114 @@
     </main>
 
 
+    <!-- MENU LATERAL -->
+
+    <aside
+        class="side-menu"
+        id="side-menu"
+        aria-hidden="true"
+    >
+
+        <div class="side-menu-header">
+
+            <span>
+                Menu
+            </span>
+
+            <button
+                class="menu-close"
+                id="menu-close"
+                type="button"
+                aria-label="Fechar menu"
+            >
+                &times;
+            </button>
+
+        </div>
+
+
+        <div class="side-menu-content">
+
+
+            <div class="menu-section">
+
+                <h2>
+                    Compartilhar
+                </h2>
+
+                <button
+                    class="menu-link-button share-text-button"
+                    id="share-button"
+                    type="button"
+                    disabled
+                >
+
+                    Compartilhar texto de hoje
+
+                </button>
+
+            </div>
+
+
+            <div class="menu-section">
+
+                <h2>
+                    Leitura offline
+                </h2>
+
+                <label class="offline-option">
+
+                    <div class="offline-option-text">
+
+                        <strong>
+                            Manter textos offline
+                        </strong>
+
+                        <small>
+                            Baixa a biblioteca para ler sem internet.
+                        </small>
+
+                    </div>
+
+                    <input
+                        type="checkbox"
+                        id="offline-toggle"
+                    >
+
+                    <span class="toggle"></span>
+
+                </label>
+
+                <p
+                    class="offline-status"
+                    id="offline-status"
+                ></p>
+
+            </div>
+
+
+        </div>
+
+    </aside>
+
+
+    <div
+        class="menu-overlay"
+        id="menu-overlay"
+    ></div>
+
+
     <!-- MARKED -->
 
     <script
         src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
+    ></script>
+
+
+    <!-- QRCODE -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"
     ></script>
 
 

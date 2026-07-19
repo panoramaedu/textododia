@@ -21,12 +21,7 @@
 
     --papel: #fffdf8;
 
-    --papel-sombra: rgba(
-        67,
-        44,
-        29,
-        0.2
-    );
+    --papel-sombra: rgba(67, 44, 29, 0.2);
 
 
     --texto: #332d2a;
@@ -109,9 +104,20 @@ body {
 
 .site-header {
 
-    text-align: center;
+    position: relative;
+
+    width: 100%;
 
     margin-bottom: 2.5rem;
+
+    text-align: center;
+
+}
+
+
+.site-header-content {
+
+    width: 100%;
 
 }
 
@@ -153,18 +159,66 @@ body {
 
 
 /* =========================================
+   MENU HAMBURGUER
+========================================= */
+
+.menu-button {
+
+    position: absolute;
+
+    top: 20%;
+
+    right: 0;
+
+    transform: translateY(-50%);
+
+    width: 40px;
+
+    height: 40px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    z-index: 10;
+
+}
+
+
+.menu-button span {
+
+    display: block;
+
+    width: 21px;
+
+    height: 2px;
+
+    background: var(--bordo);
+
+}
+
+
+/* =========================================
    ÁREA DO ENVELOPE
 ========================================= */
 
 .envelope-area {
 
-    width: min(
-
-        100%,
-
-        880px
-
-    );
+    width: min(100%, 880px);
 
     display: flex;
 
@@ -183,13 +237,7 @@ body {
 
     position: relative;
 
-    width: min(
-
-        100%,
-
-        760px
-
-    );
+    width: min(100%, 760px);
 
     height: 520px;
 
@@ -215,7 +263,7 @@ body {
 
 
 /* =========================================
-   FUNDO
+   FUNDO DO ENVELOPE
 ========================================= */
 
 .envelope-back {
@@ -681,12 +729,12 @@ body {
 
 
 /* =========================================
-   NÍVEL 1
+   NÍVEIS
 ========================================= */
 
-.envelope.nivel-1 .reading-content {
+.envelope.level-1 .reading-content {
 
-    font-family: "Momo Signature", cursive;
+    font-family: "Momo Signature", sans-serif !important;
 
     font-size: 1.45rem;
 
@@ -695,11 +743,7 @@ body {
 }
 
 
-/* =========================================
-   NÍVEL 2
-========================================= */
-
-.envelope.nivel-2 .reading-content {
+.envelope.level-2 .reading-content {
 
     font-family: "Nunito Sans", sans-serif;
 
@@ -710,11 +754,7 @@ body {
 }
 
 
-/* =========================================
-   NÍVEL 3
-========================================= */
-
-.envelope.nivel-3 .reading-content {
+.envelope.level-3 .reading-content {
 
     font-family: "Nunito Sans", sans-serif;
 
@@ -725,11 +765,7 @@ body {
 }
 
 
-/* =========================================
-   NÍVEL 4
-========================================= */
-
-.envelope.nivel-4 .reading-content {
+.envelope.level-4 .reading-content {
 
     font-family: "Nunito Sans", sans-serif;
 
@@ -847,7 +883,7 @@ body {
 
 
 /* =========================================
-   ABA
+   ABA SUPERIOR
 ========================================= */
 
 .envelope-flap {
@@ -953,10 +989,6 @@ body {
 }
 
 
-/* =========================================
-   SELOS
-========================================= */
-
 .level-selection {
 
     width: 100%;
@@ -973,6 +1005,10 @@ body {
 
 }
 
+
+/* =========================================
+   SELOS
+========================================= */
 
 .level-seal {
 
@@ -992,17 +1028,19 @@ body {
 
     padding: 0.75rem 0.6rem;
 
-    border: 1px solid rgba(
+    border: 1px solid
 
-        79,
+        rgba(
 
-        49,
+            79,
 
-        19,
+            49,
 
-        0.65
+            19,
 
-    );
+            0.65
+
+        );
 
     background:
 
@@ -1161,17 +1199,19 @@ body {
 
     inset: 5px;
 
-    border: 1px solid rgba(
+    border: 1px solid
 
-        73,
+        rgba(
 
-        45,
+            73,
 
-        17,
+            45,
 
-        0.45
+            17,
 
-    );
+            0.45
+
+        );
 
     clip-path: polygon(
 
@@ -1318,7 +1358,9 @@ body {
 
         0 0 0 2px var(--dourado),
 
-        0 0 0 4px rgba(
+        0 0 0 4px
+
+        rgba(
 
             189,
 
@@ -1378,7 +1420,9 @@ body {
 
     text-shadow:
 
-        0 1px rgba(
+        0 1px
+
+        rgba(
 
             255,
 
@@ -1444,7 +1488,7 @@ body {
 
 
 /* =========================================
-   BOTÃO
+   BOTÃO LER
 ========================================= */
 
 .read-button {
@@ -1495,10 +1539,6 @@ body {
 
 }
 
-
-/* =========================================
-   BOTÃO APÓS ABERTURA
-========================================= */
 
 .envelope.open .level-selection {
 
@@ -1641,6 +1681,462 @@ body {
 
 
 /* =========================================
+   MENU LATERAL
+========================================= */
+
+.side-menu {
+
+    position: fixed;
+
+    top: 0;
+
+    right: 0;
+
+    width: min(
+
+        360px,
+
+        88vw
+
+    );
+
+    height: 100vh;
+
+    padding: 1.5rem;
+
+    background:
+
+        linear-gradient(
+
+            145deg,
+
+            #f5f6ef,
+
+            var(--verde-fundo)
+
+        );
+
+    box-shadow:
+
+        -15px 0 35px
+
+        rgba(
+
+            61,
+
+            18,
+
+            27,
+
+            0.16
+
+        );
+
+    transform: translateX(100%);
+
+    transition:
+
+        transform 0.35s
+
+        cubic-bezier(
+
+            .22,
+
+            .61,
+
+            .36,
+
+            1
+
+        );
+
+    z-index: 100;
+
+}
+
+
+.side-menu.open {
+
+    transform: translateX(0);
+
+}
+
+
+.side-menu-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding-bottom: 1.5rem;
+
+    border-bottom: 1px solid
+
+        rgba(
+
+            189,
+
+            152,
+
+            83,
+
+            0.5
+
+        );
+
+    color: var(--bordo);
+
+    font-family: "Playfair Display", serif;
+
+    font-size: 1.2rem;
+
+}
+
+
+.menu-close {
+
+    width: 32px;
+
+    height: 32px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--bordo);
+
+    font-size: 1.8rem;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+}
+
+
+.side-menu-content {
+
+    padding-top: 2rem;
+
+}
+
+
+.menu-section {
+
+    margin-bottom: 2.5rem;
+
+}
+
+
+.menu-section h2 {
+
+    margin-bottom: 1.2rem;
+
+    color: var(--bordo);
+
+    font-family: "Playfair Display", serif;
+
+    font-size: 1rem;
+
+    font-weight: 600;
+
+}
+
+
+/* =========================================
+   BOTÕES DO MENU
+========================================= */
+
+.menu-link-button {
+
+    position: relative;
+
+    display: block;
+
+    width: 100%;
+
+    padding: 0.65rem 0;
+
+    border: 0;
+
+    border-bottom: 1px solid
+
+        rgba(
+
+            189,
+
+            152,
+
+            83,
+
+            0.25
+
+        );
+
+    background: transparent;
+
+    color: var(--texto);
+
+    font-family: "Nunito Sans", sans-serif;
+
+    font-size: 0.85rem;
+
+    text-align: left;
+
+    cursor: pointer;
+
+}
+
+
+.menu-link-button:disabled {
+
+    opacity: 0.35;
+
+    cursor: not-allowed;
+
+}
+
+
+.share-text-button:not(:disabled)::after {
+
+    content: "↗";
+
+    position: absolute;
+
+    right: 0;
+
+    color: var(--dourado);
+
+    font-size: 0.9rem;
+
+}
+
+
+/* =========================================
+   OFFLINE
+========================================= */
+
+.offline-option {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    margin-top: 1.4rem;
+
+    cursor: pointer;
+
+}
+
+
+.offline-option-text {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0.25rem;
+
+}
+
+
+.offline-option-text strong {
+
+    color: var(--texto);
+
+    font-size: 0.9rem;
+
+}
+
+
+.offline-option-text small {
+
+    color: rgba(
+
+        51,
+
+        45,
+
+        42,
+
+        0.7
+
+    );
+
+    font-size: 0.72rem;
+
+    line-height: 1.4;
+
+}
+
+
+.offline-option input {
+
+    position: absolute;
+
+    opacity: 0;
+
+}
+
+
+.toggle {
+
+    position: relative;
+
+    flex-shrink: 0;
+
+    width: 44px;
+
+    height: 24px;
+
+    border-radius: 20px;
+
+    background:
+
+        rgba(
+
+            100,
+
+            31,
+
+            44,
+
+            0.22
+
+        );
+
+    transition:
+
+        background 0.25s ease;
+
+}
+
+
+.toggle::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 3px;
+
+    left: 3px;
+
+    width: 18px;
+
+    height: 18px;
+
+    border-radius: 50%;
+
+    background: var(--papel);
+
+    box-shadow:
+
+        0 1px 3px
+
+        rgba(
+
+            0,
+
+            0,
+
+            0,
+
+            0.2
+
+        );
+
+    transition:
+
+        transform 0.25s ease;
+
+}
+
+
+.offline-option input:checked + .toggle {
+
+    background: var(--bordo);
+
+}
+
+
+.offline-option input:checked + .toggle::after {
+
+    transform: translateX(20px);
+
+}
+
+
+.offline-status {
+
+    min-height: 1.2rem;
+
+    margin-top: 0.8rem;
+
+    color: var(--bordo);
+
+    font-size: 0.72rem;
+
+    line-height: 1.4;
+
+}
+
+
+/* =========================================
+   OVERLAY
+========================================= */
+
+.menu-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+
+        rgba(
+
+            61,
+
+            18,
+
+            27,
+
+            0.22
+
+        );
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transition:
+
+        opacity 0.35s ease,
+
+        visibility 0.35s ease;
+
+    z-index: 90;
+
+}
+
+
+.menu-overlay.open {
+
+    opacity: 1;
+
+    visibility: visible;
+
+}
+
+
+/* =========================================
    RESPONSIVIDADE
 ========================================= */
 
@@ -1663,6 +2159,13 @@ body {
     .site-header {
 
         margin-bottom: 1.8rem;
+
+    }
+
+
+    .menu-button {
+
+        right: 0;
 
     }
 
@@ -1754,6 +2257,13 @@ body {
     .seal-description {
 
         font-size: 0.5rem;
+
+    }
+
+
+    .menu-button {
+
+        right: -2px;
 
     }
 

@@ -16,6 +16,18 @@ import {
 } from "./envelope.js";
 
 
+import {
+    isOfflineEnabled,
+    setOfflineEnabled,
+    downloadOfflineLibrary,
+    clearOfflineLibrary
+} from "./offline.js";
+
+
+/* =========================================
+   ELEMENTOS
+========================================= */
+
 const envelope =
     document.querySelector(
         ".envelope"
@@ -58,6 +70,46 @@ const textMetadata =
     );
 
 
+const menuButton =
+    document.querySelector(
+        "#menu-button"
+    );
+
+
+const menuClose =
+    document.querySelector(
+        "#menu-close"
+    );
+
+
+const sideMenu =
+    document.querySelector(
+        "#side-menu"
+    );
+
+
+const menuOverlay =
+    document.querySelector(
+        "#menu-overlay"
+    );
+
+
+const offlineToggle =
+    document.querySelector(
+        "#offline-toggle"
+    );
+
+
+const offlineStatus =
+    document.querySelector(
+        "#offline-status"
+    );
+
+
+/* =========================================
+   ESTADO
+========================================= */
+
 let selectedLevel =
     null;
 
@@ -65,6 +117,10 @@ let selectedLevel =
 let envelopeOpen =
     false;
 
+
+/* =========================================
+   CONFIGURAÇÃO DA CARTA
+========================================= */
 
 const CLOSED_ENVELOPE_HEIGHT =
     520;
@@ -99,7 +155,7 @@ textDate.textContent =
 
 
 /* =========================================
-   ALTURA DO ENVELOPE
+   CARTA
 ========================================= */
 
 function calculateEnvelopeHeight() {
@@ -126,9 +182,14 @@ function calculateEnvelopeHeight() {
 }
 
 
-/* =========================================
-   CENTRALIZAÇÃO
-========================================= */
+function resizeEnvelope() {
+
+
+    envelope.style.height =
+        `${calculateEnvelopeHeight()}px`;
+
+}
+
 
 function centerEnvelope() {
 
@@ -166,28 +227,11 @@ function centerEnvelope() {
 }
 
 
-/* =========================================
-   RESTAURA POSIÇÃO
-========================================= */
-
 function resetEnvelopePosition() {
 
 
     envelope.style.transform =
         "";
-
-}
-
-
-/* =========================================
-   AJUSTA ALTURA
-========================================= */
-
-function resizeEnvelope() {
-
-
-    envelope.style.height =
-        `${calculateEnvelopeHeight()}px`;
 
 }
 
@@ -213,9 +257,7 @@ function displayMetadata(
 
         <p class="text-details">
             ${text.genre}
-
             <span>·</span>
-
             ${text.theme}
         </p>
 
@@ -234,7 +276,7 @@ function clearMetadata() {
 
 
 /* =========================================
-   SELEÇÃO DO NÍVEL
+   NÍVEL
 ========================================= */
 
 levelButtons.forEach(
@@ -248,6 +290,7 @@ levelButtons.forEach(
 
                 levelButtons.forEach(
                     item => {
+
 
                         item.classList.remove(
                             "selected"
@@ -277,7 +320,7 @@ levelButtons.forEach(
 
 
 /* =========================================
-   ABRIR CARTA
+   ABRE CARTA
 ========================================= */
 
 async function openLetter() {
@@ -321,6 +364,21 @@ async function openLetter() {
 
         readingContent.innerHTML =
             text.content;
+
+
+        envelope.classList.remove(
+
+            "level-1",
+            "level-2",
+            "level-3",
+            "level-4"
+
+        );
+
+
+        envelope.classList.add(
+            selectedLevel
+        );
 
 
         resizeEnvelope();
@@ -404,7 +462,7 @@ async function openLetter() {
 
 
 /* =========================================
-   FECHAR CARTA
+   FECHA CARTA
 ========================================= */
 
 function closeLetter() {
@@ -433,8 +491,19 @@ function closeLetter() {
     clearMetadata();
 
 
+    envelope.classList.remove(
+
+        "level-1",
+        "level-2",
+        "level-3",
+        "level-4"
+
+    );
+
+
     levelButtons.forEach(
         button => {
+
 
             button.classList.remove(
                 "selected"
@@ -455,7 +524,7 @@ function closeLetter() {
 
 
 /* =========================================
-   BOTÃO
+   BOTÃO LER
 ========================================= */
 
 readButton.addEventListener(
@@ -467,7 +536,9 @@ readButton.addEventListener(
             envelopeOpen
         ) {
 
+
             closeLetter();
+
 
             return;
 
@@ -481,7 +552,247 @@ readButton.addEventListener(
 
 
 /* =========================================
-   RESPONSIVIDADE
+   MENU
+========================================= */
+
+function openMenu() {
+
+
+    sideMenu.classList.add(
+        "open"
+    );
+
+
+    menuOverlay.classList.add(
+        "open"
+    );
+
+
+    menuButton.setAttribute(
+        "aria-expanded",
+        "true"
+    );
+
+
+    sideMenu.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+}
+
+
+function closeMenu() {
+
+
+    sideMenu.classList.remove(
+        "open"
+    );
+
+
+    menuOverlay.classList.remove(
+        "open"
+    );
+
+
+    menuButton.setAttribute(
+        "aria-expanded",
+        "false"
+    );
+
+
+    sideMenu.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+}
+
+
+menuButton.addEventListener(
+    "click",
+    openMenu
+);
+
+
+menuClose.addEventListener(
+    "click",
+    closeMenu
+);
+
+
+menuOverlay.addEventListener(
+    "click",
+    closeMenu
+);
+
+
+/* =========================================
+   OFFLINE
+========================================= */
+
+function updateOfflineStatus(
+    message
+) {
+
+
+    offlineStatus.textContent =
+        message;
+
+}
+
+
+async function enableOffline() {
+
+
+    offlineToggle.disabled =
+        true;
+
+
+    updateOfflineStatus(
+        "Preparando sua biblioteca..."
+    );
+
+
+    try {
+
+
+        await downloadOfflineLibrary(
+            (
+                completed,
+                total
+            ) => {
+
+
+                const percentage =
+                    Math.round(
+                        completed / total * 100
+                    );
+
+
+                updateOfflineStatus(
+                    `Biblioteca offline: ${percentage}%`
+                );
+
+            }
+        );
+
+
+        setOfflineEnabled(
+            true
+        );
+
+
+        updateOfflineStatus(
+            "Textos disponíveis offline."
+        );
+
+
+    } catch (
+        error
+    ) {
+
+
+        console.error(
+            error
+        );
+
+
+        setOfflineEnabled(
+            false
+        );
+
+
+        offlineToggle.checked =
+            false;
+
+
+        updateOfflineStatus(
+            "Não foi possível preparar a biblioteca."
+        );
+
+    }
+
+
+    offlineToggle.disabled =
+        false;
+
+}
+
+
+async function disableOffline() {
+
+
+    offlineToggle.disabled =
+        true;
+
+
+    updateOfflineStatus(
+        "Removendo biblioteca offline..."
+    );
+
+
+    await clearOfflineLibrary();
+
+
+    setOfflineEnabled(
+        false
+    );
+
+
+    updateOfflineStatus(
+        "Textos offline desativados."
+    );
+
+
+    offlineToggle.disabled =
+        false;
+
+}
+
+
+offlineToggle.checked =
+    isOfflineEnabled();
+
+
+if (
+    offlineToggle.checked
+) {
+
+
+    updateOfflineStatus(
+        "Textos offline ativados."
+    );
+
+}
+
+
+offlineToggle.addEventListener(
+    "change",
+    async () => {
+
+
+        if (
+            offlineToggle.checked
+        ) {
+
+
+            await enableOffline();
+
+
+        } else {
+
+
+            await disableOffline();
+
+        }
+
+    }
+);
+
+
+/* =========================================
+   RESIZE
 ========================================= */
 
 window.addEventListener(
@@ -511,3 +822,27 @@ window.addEventListener(
 
     }
 );
+
+
+/* =========================================
+   SERVICE WORKER
+========================================= */
+
+if (
+    "serviceWorker" in navigator
+) {
+
+
+    window.addEventListener(
+        "load",
+        () => {
+
+
+            navigator.serviceWorker.register(
+                "./service-worker.js"
+            );
+
+        }
+    );
+
+}

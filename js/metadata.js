@@ -1,27 +1,51 @@
+import {
+    getOfflineText
+} from "./offline.js";
+
+
 export async function loadTextMetadata(
     level,
     day
 ) {
 
-    const path =
-        `../textos/${level}/${day}.md`;
 
-
-    const response =
-        await fetch(path);
-
-
-    if (!response.ok) {
-
-        throw new Error(
-            "Texto não encontrado."
+    let rawText =
+        await getOfflineText(
+            level,
+            day
         );
 
+
+    if (
+        !rawText
+    ) {
+
+
+        const path =
+            `textos/${level}/${day}.md`;
+
+
+        const response =
+            await fetch(
+                path
+            );
+
+
+        if (
+            !response.ok
+        ) {
+
+            throw new Error(
+                "Texto não encontrado."
+            );
+
+        }
+
+
+        rawText =
+            await response.text();
+
     }
-
-
-    const rawText =
-        await response.text();
 
 
     const frontMatterMatch =
@@ -30,7 +54,9 @@ export async function loadTextMetadata(
         );
 
 
-    if (!frontMatterMatch) {
+    if (
+        !frontMatterMatch
+    ) {
 
         throw new Error(
             "Metadados inválidos."
@@ -53,58 +79,67 @@ export async function loadTextMetadata(
 
     metadataBlock
         .split("\n")
-        .forEach(line => {
+        .forEach(
+            line => {
 
 
-            const separator =
-                line.indexOf(":");
+                const separator =
+                    line.indexOf(
+                        ":"
+                    );
 
 
-            if (
-                separator === -1
-            ) {
+                if (
+                    separator === -1
+                ) {
 
-                return;
+                    return;
+
+                }
+
+
+                const key =
+                    line
+                        .slice(
+                            0,
+                            separator
+                        )
+                        .trim();
+
+
+                const value =
+                    line
+                        .slice(
+                            separator + 1
+                        )
+                        .trim();
+
+
+                metadata[key] =
+                    value;
 
             }
-
-
-            const key =
-                line
-                    .slice(
-                        0,
-                        separator
-                    )
-                    .trim();
-
-
-            const value =
-                line
-                    .slice(
-                        separator + 1
-                    )
-                    .trim();
-
-
-            metadata[key] =
-                value;
-
-        });
+        );
 
 
     return {
 
+
         title:
             metadata.title,
+
 
         author:
             metadata.author,
 
+
         genre:
             metadata.genre,
 
+
         theme:
             metadata.theme,
+
 
         content:
             marked.parse(

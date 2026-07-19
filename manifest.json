@@ -1,0 +1,11 @@
+{
+    "name": "Textododia",
+    "short_name": "Textododia",
+    "description": "Uma leitura para cada dia.",
+    "lang": "pt-BR",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#edf0e4",
+    "theme_color": "#641f2c",
+    "orientation": "portrait"
+}

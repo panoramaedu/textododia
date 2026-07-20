@@ -4,6 +4,8 @@
     "description": "Uma leitura para cada dia.",
     "lang": "pt-BR",
     "start_url": "./",
+    "scope": "./",
+    "id": "./",
     "display": "standalone",
     "background_color": "#edf0e4",
     "theme_color": "#641f2c",

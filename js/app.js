@@ -60,6 +60,11 @@ import {
 } from "./streak-ui.js";
 
 
+import {
+    initInstallPrompt
+} from "./install-ui.js";
+
+
 /* =========================================
    ELEMENTOS
 ========================================= */
@@ -163,6 +168,24 @@ const menuStreak =
 const calendarStreak =
     document.querySelector(
         "#calendar-streak"
+    );
+
+
+const installSection =
+    document.querySelector(
+        "#install-section"
+    );
+
+
+const installButton =
+    document.querySelector(
+        "#install-button"
+    );
+
+
+const installIosTip =
+    document.querySelector(
+        "#install-ios-tip"
     );
 
 
@@ -1341,6 +1364,19 @@ window.addEventListener(
             { updateUrl: false }
         );
 
+    }
+);
+
+
+/* =========================================
+   INSTALAÇÃO DO APP (FASE 8)
+========================================= */
+
+initInstallPrompt(
+    {
+        section: installSection,
+        button: installButton,
+        iosTip: installIosTip
     }
 );
 

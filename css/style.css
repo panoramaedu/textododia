@@ -58,9 +58,15 @@ body {
 
     min-height: 100vh;
 
+    min-height: 100dvh;
+
     color: var(--texto);
 
     font-family: "Nunito Sans", sans-serif;
+
+    overscroll-behavior-y: none;
+
+    -webkit-tap-highlight-color: transparent;
 
     background:
 
@@ -80,12 +86,39 @@ body {
 
 
 /* =========================================
+   MODO STANDALONE (APP INSTALADO)
+
+   Garante espaço para o notch/ilha dinâmica
+   e para a barra inferior de gestos do iOS.
+========================================= */
+
+@media (display-mode: standalone) {
+
+
+    body {
+
+        padding-top: env(safe-area-inset-top);
+
+        padding-bottom: env(safe-area-inset-bottom);
+
+        padding-left: env(safe-area-inset-left);
+
+        padding-right: env(safe-area-inset-right);
+
+    }
+
+}
+
+
+/* =========================================
    APP
 ========================================= */
 
 .app {
 
     min-height: 100vh;
+
+    min-height: 100dvh;
 
     display: flex;
 
@@ -1702,6 +1735,8 @@ body {
 
     height: 100vh;
 
+    height: 100dvh;
+
     padding: 1.5rem;
 
     background:
@@ -2885,6 +2920,29 @@ body {
     color: var(--bordo-claro);
 
     font-size: 0.7rem;
+
+}
+
+
+.install-ios-tip {
+
+    color: rgba(
+        51,
+        45,
+        42,
+        0.75
+    );
+
+    font-size: 0.78rem;
+
+    line-height: 1.55;
+
+}
+
+
+.install-ios-tip strong {
+
+    color: var(--bordo);
 
 }
 

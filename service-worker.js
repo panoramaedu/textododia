@@ -1,5 +1,5 @@
 const CACHE_NAME =
-    "textododia-shell-v5";
+    "textododia-shell-v6";
 
 
 const CORE_ASSETS = [
@@ -16,6 +16,7 @@ const CORE_ASSETS = [
     "./js/reading-log.js",
     "./js/history-ui.js",
     "./js/streak-ui.js",
+    "./js/install-ui.js",
     "./js/metadata.js",
     "./js/envelope.js",
     "./js/offline.js",
@@ -25,7 +26,8 @@ const CORE_ASSETS = [
     "./manifest.json",
 
     "./icons/icon-192.png",
-    "./icons/icon-512.png"
+    "./icons/icon-512.png",
+    "./icons/apple-touch-icon.png"
 
 ];
 

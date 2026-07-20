@@ -1246,7 +1246,32 @@ offlineToggle.addEventListener(
 
 /* =========================================
    RESIZE
+
+   No celular, rolar a tela faz a barra de
+   endereço do navegador esconder/aparecer,
+   o que dispara "resize" repetidamente e só
+   muda a altura da janela (não a largura).
+   Sem esse cuidado, isso recalculava e
+   recentralizava o envelope a cada disparo,
+   causando o engasgo relatado ao ler a carta
+   no celular.
+
+   Correção: (1) só reage depois que os disparos
+   param por um instante (debounce), e (2) só
+   recentraliza a carta se a LARGURA mudou de
+   verdade (rotação de tela, redimensionamento
+   real) — variações só de altura apenas
+   reajustam o tamanho do envelope, sem mover
+   a carta debaixo do usuário enquanto ele lê.
 ========================================= */
+
+let lastWindowWidth =
+    window.innerWidth;
+
+
+let resizeDebounceId =
+    null;
+
 
 window.addEventListener(
     "resize",
@@ -1262,16 +1287,45 @@ window.addEventListener(
         }
 
 
-        resizeEnvelope();
-
-
-        requestAnimationFrame(
-            () => {
-
-                centerEnvelope();
-
-            }
+        window.clearTimeout(
+            resizeDebounceId
         );
+
+
+        resizeDebounceId =
+            window.setTimeout(
+                () => {
+
+
+                    resizeEnvelope();
+
+
+                    const widthChanged =
+                        window.innerWidth !== lastWindowWidth;
+
+
+                    lastWindowWidth =
+                        window.innerWidth;
+
+
+                    if (
+                        widthChanged
+                    ) {
+
+                        requestAnimationFrame(
+                            () => {
+
+                                centerEnvelope();
+
+                            }
+                        );
+
+                    }
+
+
+                },
+                150
+            );
 
     }
 );

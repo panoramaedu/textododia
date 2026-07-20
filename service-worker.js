@@ -1,5 +1,5 @@
 const CACHE_NAME =
-    "textododia-shell-v6";
+    "textododia-shell-v7";
 
 
 const CORE_ASSETS = [

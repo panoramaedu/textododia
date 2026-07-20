@@ -29,6 +29,37 @@ import {
 } from "./share.js";
 
 
+import {
+    parseCurrentRoute,
+    goToRoute,
+    goToHome
+} from "./router.js";
+
+
+import {
+    recordReadDay,
+    recordHistoryEntry,
+    getCurrentStreak,
+    updateLongestStreak
+} from "./reading-log.js";
+
+
+import {
+    createReadingCalendar
+} from "./calendar-ui.js";
+
+
+import {
+    createReadingHistory
+} from "./history-ui.js";
+
+
+import {
+    renderStreakBadge,
+    renderStreakDetails
+} from "./streak-ui.js";
+
+
 /* =========================================
    ELEMENTOS
 ========================================= */
@@ -114,6 +145,108 @@ const offlineStatus =
 const shareButton =
     document.querySelector(
         "#share-button"
+    );
+
+
+const calendarOpenButton =
+    document.querySelector(
+        "#calendar-open-button"
+    );
+
+
+const menuStreak =
+    document.querySelector(
+        "#menu-streak"
+    );
+
+
+const calendarStreak =
+    document.querySelector(
+        "#calendar-streak"
+    );
+
+
+const calendarModal =
+    document.querySelector(
+        "#calendar-modal"
+    );
+
+
+const calendarOverlay =
+    document.querySelector(
+        "#calendar-overlay"
+    );
+
+
+const calendarClose =
+    document.querySelector(
+        "#calendar-close"
+    );
+
+
+const calendarPrev =
+    document.querySelector(
+        "#calendar-prev"
+    );
+
+
+const calendarNext =
+    document.querySelector(
+        "#calendar-next"
+    );
+
+
+const calendarTitle =
+    document.querySelector(
+        "#calendar-title"
+    );
+
+
+const calendarGrid =
+    document.querySelector(
+        "#calendar-grid"
+    );
+
+
+const historyOpenButton =
+    document.querySelector(
+        "#history-open-button"
+    );
+
+
+const historyModal =
+    document.querySelector(
+        "#history-modal"
+    );
+
+
+const historyOverlay =
+    document.querySelector(
+        "#history-overlay"
+    );
+
+
+const historyClose =
+    document.querySelector(
+        "#history-close"
+    );
+
+
+const historyList =
+    document.querySelector(
+        "#history-list"
+    );
+
+
+const historyEmpty =
+    document.querySelector(
+        "#history-empty"
+    );
+
+
+const historyClearButton =
+    document.querySelector(
+        "#history-clear"
     );
 
 
@@ -294,6 +427,34 @@ function clearMetadata() {
    NÍVEL
 ========================================= */
 
+function selectLevelButton(
+    level
+) {
+
+
+    levelButtons.forEach(
+        item => {
+
+
+            item.classList.toggle(
+                "selected",
+                item.dataset.level === level
+            );
+
+        }
+    );
+
+
+    selectedLevel =
+        level;
+
+
+    readButton.disabled =
+        false;
+
+}
+
+
 levelButtons.forEach(
     button => {
 
@@ -303,29 +464,9 @@ levelButtons.forEach(
             () => {
 
 
-                levelButtons.forEach(
-                    item => {
-
-
-                        item.classList.remove(
-                            "selected"
-                        );
-
-                    }
+                selectLevelButton(
+                    button.dataset.level
                 );
-
-
-                button.classList.add(
-                    "selected"
-                );
-
-
-                selectedLevel =
-                    button.dataset.level;
-
-
-                readButton.disabled =
-                    false;
 
             }
         );
@@ -338,16 +479,24 @@ levelButtons.forEach(
    ABRE CARTA
 ========================================= */
 
-async function openLetter() {
+async function openLetter(
+    level,
+    day,
+    { updateUrl = true, replaceUrl = false } = {}
+) {
 
 
     if (
-        !selectedLevel
+        !level
     ) {
 
         return;
 
     }
+
+
+    selectedLevel =
+        level;
 
 
     try {
@@ -367,13 +516,52 @@ async function openLetter() {
 
         const text =
             await loadTextMetadata(
-                selectedLevel,
-                textDay
+                level,
+                day
             );
 
 
         currentText =
             text;
+
+
+        recordReadDay(
+            (
+                new Date()
+            ).getFullYear(),
+            day,
+            level
+        );
+
+
+        recordHistoryEntry(
+            {
+                year:
+                    (
+                        new Date()
+                    ).getFullYear(),
+
+                day,
+
+                level,
+
+                title:
+                    text.title,
+
+                author:
+                    text.author
+            }
+        );
+
+
+        updateLongestStreak(
+            getCurrentStreak()
+        );
+
+
+        renderStreakBadge(
+            menuStreak
+        );
 
 
         displayMetadata(
@@ -387,6 +575,19 @@ async function openLetter() {
 
         shareButton.disabled =
             false;
+
+
+        if (
+            updateUrl
+        ) {
+
+            goToRoute(
+                level,
+                day,
+                { replace: replaceUrl }
+            );
+
+        }
 
 
         resizeEnvelope();
@@ -430,6 +631,19 @@ async function openLetter() {
 
         shareButton.disabled =
             true;
+
+
+        if (
+            updateUrl
+        ) {
+
+            goToRoute(
+                level,
+                day,
+                { replace: true }
+            );
+
+        }
 
 
         readingContent.innerHTML = `
@@ -481,7 +695,9 @@ async function openLetter() {
    FECHA CARTA
 ========================================= */
 
-function closeLetter() {
+function closeLetter(
+    { updateUrl = true } = {}
+) {
 
 
     envelopeOpen =
@@ -515,14 +731,13 @@ function closeLetter() {
         true;
 
 
-    envelope.classList.remove(
+    if (
+        updateUrl
+    ) {
 
-        "level-1",
-        "level-2",
-        "level-3",
-        "level-4"
+        goToHome();
 
-    );
+    }
 
 
     levelButtons.forEach(
@@ -569,7 +784,10 @@ readButton.addEventListener(
         }
 
 
-        await openLetter();
+        await openLetter(
+            selectedLevel,
+            textDay
+        );
 
     }
 );
@@ -580,6 +798,11 @@ readButton.addEventListener(
 ========================================= */
 
 function openMenu() {
+
+
+    renderStreakBadge(
+        menuStreak
+    );
 
 
     sideMenu.classList.add(
@@ -648,6 +871,110 @@ menuClose.addEventListener(
 menuOverlay.addEventListener(
     "click",
     closeMenu
+);
+
+
+/* =========================================
+   CALENDÁRIO DE LEITURA (FASE 4)
+========================================= */
+
+const readingCalendar =
+    createReadingCalendar(
+        {
+            modal: calendarModal,
+            overlay: calendarOverlay,
+            closeButton: calendarClose,
+            prevButton: calendarPrev,
+            nextButton: calendarNext,
+            titleEl: calendarTitle,
+            gridEl: calendarGrid,
+            onSelectDay: (
+                level,
+                day
+            ) => {
+
+
+                readingCalendar.close();
+
+
+                closeMenu();
+
+
+                openLetter(
+                    level,
+                    day
+                );
+
+            }
+        }
+    );
+
+
+calendarOpenButton.addEventListener(
+    "click",
+    () => {
+
+
+        closeMenu();
+
+
+        renderStreakDetails(
+            calendarStreak
+        );
+
+
+        readingCalendar.open();
+
+    }
+);
+
+
+/* =========================================
+   HISTÓRICO DE LEITURA (FASE 7)
+========================================= */
+
+const readingHistory =
+    createReadingHistory(
+        {
+            modal: historyModal,
+            overlay: historyOverlay,
+            closeButton: historyClose,
+            listEl: historyList,
+            emptyEl: historyEmpty,
+            clearButton: historyClearButton,
+            onSelectEntry: (
+                level,
+                day
+            ) => {
+
+
+                readingHistory.close();
+
+
+                closeMenu();
+
+
+                openLetter(
+                    level,
+                    day
+                );
+
+            }
+        }
+    );
+
+
+historyOpenButton.addEventListener(
+    "click",
+    () => {
+
+
+        closeMenu();
+
+
+        readingHistory.open();
+
+    }
 );
 
 
@@ -921,6 +1248,97 @@ window.addEventListener(
                 centerEnvelope();
 
             }
+        );
+
+    }
+);
+
+
+/* =========================================
+   ROTEAMENTO (FASE 6)
+========================================= */
+
+function applyRoute(
+    route,
+    { updateUrl = false, replaceUrl = false } = {}
+) {
+
+
+    if (
+        !route
+    ) {
+
+        if (
+            envelopeOpen
+        ) {
+
+            closeLetter(
+                { updateUrl }
+            );
+
+        }
+
+
+        return;
+
+    }
+
+
+    selectLevelButton(
+        route.level
+    );
+
+
+    openLetter(
+        route.level,
+        route.day,
+        { updateUrl, replaceUrl }
+    );
+
+}
+
+
+const initialRoute =
+    parseCurrentRoute();
+
+
+if (
+    initialRoute
+) {
+
+
+    applyRoute(
+        initialRoute,
+        { updateUrl: true, replaceUrl: true }
+    );
+
+
+} else if (
+    window.location.search.includes(
+        "redirect="
+    )
+) {
+
+
+    // Veio do fallback de 404, mas o caminho
+    // não bateu com nenhuma rota conhecida —
+    // limpa a URL e volta para a home.
+
+    goToHome(
+        { replace: true }
+    );
+
+}
+
+
+window.addEventListener(
+    "popstate",
+    () => {
+
+
+        applyRoute(
+            parseCurrentRoute(),
+            { updateUrl: false }
         );
 
     }

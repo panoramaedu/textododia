@@ -71,3 +71,74 @@ export function formatDate(
     ).format(date);
 
 }
+
+
+/* =========================================
+   UTILITÁRIOS DE GRADE MENSAL
+   (usados pelo calendário de leitura)
+========================================= */
+
+export function getMonthLabel(
+    year,
+    month
+) {
+
+    return new Intl.DateTimeFormat(
+        "pt-BR",
+        {
+            month: "long",
+            year: "numeric"
+        }
+    ).format(
+        new Date(
+            year,
+            month,
+            1
+        )
+    );
+
+}
+
+
+export function getDaysInMonth(
+    year,
+    month
+) {
+
+    return new Date(
+        year,
+        month + 1,
+        0
+    ).getDate();
+
+}
+
+
+export function getFirstWeekdayOfMonth(
+    year,
+    month
+) {
+
+    return new Date(
+        year,
+        month,
+        1
+    ).getDay();
+
+}
+
+
+export function isSameDate(
+    dateA,
+    dateB
+) {
+
+    return (
+
+        dateA.getFullYear() === dateB.getFullYear() &&
+        dateA.getMonth() === dateB.getMonth() &&
+        dateA.getDate() === dateB.getDate()
+
+    );
+
+}

@@ -1,20 +1,26 @@
 const CACHE_NAME =
-    "textododia-shell-v1";
+    "textododia-shell-v5";
 
 
 const CORE_ASSETS = [
 
     "./",
     "./index.html",
+    "./404.html",
 
     "./css/style.css",
 
     "./js/app.js",
     "./js/calendar.js",
+    "./js/calendar-ui.js",
+    "./js/reading-log.js",
+    "./js/history-ui.js",
+    "./js/streak-ui.js",
     "./js/metadata.js",
     "./js/envelope.js",
     "./js/offline.js",
     "./js/share.js",
+    "./js/router.js",
 
     "./manifest.json",
 
@@ -111,6 +117,33 @@ self.addEventListener(
         if (
             url.origin === location.origin
         ) {
+
+
+            if (
+                request.mode === "navigate"
+            ) {
+
+
+                event.respondWith(
+
+                    fetch(
+                        request
+                    )
+                    .catch(
+                        () =>
+
+                            caches.match(
+                                "./index.html"
+                            )
+
+                    )
+
+                );
+
+
+                return;
+
+            }
 
 
             event.respondWith(

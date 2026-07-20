@@ -1,0 +1,8 @@
+# Faz qualquer caminho (ex.: /leitura/nivel-1/200)
+# servir o index.html, deixando o roteamento
+# por conta do js/router.js (Fase 6).
+# Usado apenas por hosts que leem este arquivo
+# (ex.: Netlify). Em outros hosts, o 404.html
+# cumpre esse papel.
+
+/*  /index.html  200

@@ -343,6 +343,40 @@
             <div class="menu-section">
 
                 <h2>
+                    Sua leitura
+                </h2>
+
+                <p
+                    class="streak-indicator"
+                    id="menu-streak"
+                ></p>
+
+                <button
+                    class="menu-link-button"
+                    id="calendar-open-button"
+                    type="button"
+                >
+
+                    Ver calendário de leitura
+
+                </button>
+
+                <button
+                    class="menu-link-button"
+                    id="history-open-button"
+                    type="button"
+                >
+
+                    Ver histórico de leitura
+
+                </button>
+
+            </div>
+
+
+            <div class="menu-section">
+
+                <h2>
                     Leitura offline
                 </h2>
 
@@ -386,6 +420,164 @@
         class="menu-overlay"
         id="menu-overlay"
     ></div>
+
+
+    <!-- CALENDÁRIO DE LEITURA -->
+
+    <div
+        class="calendar-overlay"
+        id="calendar-overlay"
+    ></div>
+
+
+    <div
+        class="calendar-modal"
+        id="calendar-modal"
+        aria-hidden="true"
+        role="dialog"
+        aria-label="Calendário de leitura"
+    >
+
+        <button
+            class="calendar-close"
+            id="calendar-close"
+            type="button"
+            aria-label="Fechar calendário"
+        >
+            &times;
+        </button>
+
+
+        <div class="calendar-modal-header">
+
+            <button
+                class="calendar-nav-button"
+                id="calendar-prev"
+                type="button"
+                aria-label="Mês anterior"
+            >
+                &#8249;
+            </button>
+
+            <span
+                class="calendar-modal-title"
+                id="calendar-title"
+            ></span>
+
+            <button
+                class="calendar-nav-button"
+                id="calendar-next"
+                type="button"
+                aria-label="Próximo mês"
+            >
+                &#8250;
+            </button>
+
+        </div>
+
+
+        <div
+            class="streak-details"
+            id="calendar-streak"
+        ></div>
+
+
+        <div class="calendar-weekdays">
+
+            <span>D</span>
+            <span>S</span>
+            <span>T</span>
+            <span>Q</span>
+            <span>Q</span>
+            <span>S</span>
+            <span>S</span>
+
+        </div>
+
+
+        <div
+            class="calendar-grid"
+            id="calendar-grid"
+        ></div>
+
+
+        <div class="calendar-legend">
+
+            <span class="calendar-legend-item">
+                <span class="calendar-dot read"></span>
+                Lido
+            </span>
+
+            <span class="calendar-legend-item">
+                <span class="calendar-dot today"></span>
+                Hoje
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- HISTÓRICO DE LEITURA -->
+
+    <div
+        class="history-overlay"
+        id="history-overlay"
+    ></div>
+
+
+    <div
+        class="history-modal"
+        id="history-modal"
+        aria-hidden="true"
+        role="dialog"
+        aria-label="Histórico de leitura"
+    >
+
+        <button
+            class="calendar-close"
+            id="history-close"
+            type="button"
+            aria-label="Fechar histórico"
+        >
+            &times;
+        </button>
+
+
+        <div class="history-modal-header">
+
+            <span class="calendar-modal-title">
+                Histórico de leitura
+            </span>
+
+        </div>
+
+
+        <p
+            class="history-empty"
+            id="history-empty"
+        >
+            Você ainda não leu nenhum texto
+            neste aparelho.
+        </p>
+
+
+        <div
+            class="history-list"
+            id="history-list"
+        ></div>
+
+
+        <button
+            class="history-clear-button"
+            id="history-clear"
+            type="button"
+            hidden
+        >
+            Limpar histórico
+        </button>
+
+    </div>
 
 
     <!-- MARKED -->

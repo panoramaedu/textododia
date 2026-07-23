@@ -751,6 +751,12 @@ body {
 
     margin-bottom: 1.25rem;
 
+    text-align: justify;
+
+    text-justify: inter-word;
+
+    hyphens: auto;
+
 }
 
 
@@ -763,13 +769,18 @@ body {
 
 /* =========================================
    NÍVEIS
+
+   font-size usa calc() com a variável
+   --reading-scale para que o controle de
+   tamanho de fonte (A-/A+) funcione em
+   qualquer nível, sem duplicar regras.
 ========================================= */
 
 .envelope.nivel-1 .reading-content {
 
     font-family: "Momo Signature", sans-serif !important;
 
-    font-size: 1.45rem;
+    font-size: calc(1.45rem * var(--reading-scale, 1)) !important;
 
     line-height: 1.7;
 
@@ -780,7 +791,7 @@ body {
 
     font-family: "Nunito Sans", sans-serif;
 
-    font-size: 1.05rem;
+    font-size: calc(1.05rem * var(--reading-scale, 1));
 
     line-height: 1.8;
 
@@ -791,7 +802,7 @@ body {
 
     font-family: "Nunito Sans", sans-serif;
 
-    font-size: 1rem;
+    font-size: calc(1rem * var(--reading-scale, 1));
 
     line-height: 1.85;
 
@@ -802,11 +813,117 @@ body {
 
     font-family: "Nunito Sans", sans-serif;
 
-    font-size: 0.98rem;
+    font-size: calc(0.98rem * var(--reading-scale, 1));
 
     line-height: 1.95;
 
     letter-spacing: 0.01em;
+
+}
+
+
+/* =========================================
+   CONTROLE DE TAMANHO DE FONTE
+========================================= */
+
+.font-size-control {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 0.5rem;
+
+    margin-bottom: 1.6rem;
+
+}
+
+
+.font-size-button {
+
+    width: 34px;
+
+    height: 34px;
+
+    border: 1px solid
+        rgba(
+            189,
+            152,
+            83,
+            0.5
+        );
+
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: var(--bordo);
+
+    font-family: "Nunito Sans", sans-serif;
+
+    font-weight: 700;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease;
+
+}
+
+
+.font-size-button:hover:not(:disabled) {
+
+    background:
+        rgba(
+            189,
+            152,
+            83,
+            0.15
+        );
+
+}
+
+
+.font-size-button:disabled {
+
+    opacity: 0.35;
+
+    cursor: not-allowed;
+
+}
+
+
+.font-size-button.font-size-decrease {
+
+    font-size: 0.75rem;
+
+}
+
+
+.font-size-button.font-size-increase {
+
+    font-size: 1.05rem;
+
+}
+
+
+.font-size-button.font-size-reset {
+
+    width: auto;
+
+    padding: 0 0.7rem;
+
+    border-radius: 17px;
+
+    font-size: 0.68rem;
+
+    letter-spacing: 0.03em;
+
+    text-transform: uppercase;
 
 }
 

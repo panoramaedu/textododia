@@ -65,6 +65,11 @@ import {
 } from "./install-ui.js";
 
 
+import {
+    initFontSizeControl
+} from "./font-size-ui.js";
+
+
 /* =========================================
    ELEMENTOS
 ========================================= */
@@ -189,6 +194,24 @@ const installIosTip =
     );
 
 
+const fontDecreaseButton =
+    document.querySelector(
+        "#font-decrease"
+    );
+
+
+const fontResetButton =
+    document.querySelector(
+        "#font-reset"
+    );
+
+
+const fontIncreaseButton =
+    document.querySelector(
+        "#font-increase"
+    );
+
+
 const calendarModal =
     document.querySelector(
         "#calendar-modal"
@@ -289,6 +312,10 @@ let currentText =
     null;
 
 
+let openLetterRequestId =
+    0;
+
+
 /* =========================================
    CONFIGURAÇÃO DA CARTA
 ========================================= */
@@ -356,8 +383,36 @@ function calculateEnvelopeHeight() {
 function resizeEnvelope() {
 
 
+    const requiredHeight =
+        calculateEnvelopeHeight();
+
+
+    const currentHeight =
+        parseFloat(
+            envelope.style.height
+        );
+
+
+    // Só escreve no DOM se o valor realmente
+    // mudou — evitar isso é o que impede que a
+    // transição CSS de "height" seja reiniciada
+    // sem necessidade (era uma das causas do
+    // engasgo ao rolar a carta no celular).
+
+    if (
+        currentHeight === requiredHeight
+    ) {
+
+        return false;
+
+    }
+
+
     envelope.style.height =
-        `${calculateEnvelopeHeight()}px`;
+        `${requiredHeight}px`;
+
+
+    return true;
 
 }
 
@@ -374,8 +429,42 @@ function centerEnvelope() {
     }
 
 
+    // Sempre medimos a partir da posição natural
+    // (sem transform) — se medíssemos em cima de
+    // um transform anterior, a conta ficaria
+    // errada e o deslocamento se acumularia a
+    // cada chamada.
+
+    envelope.style.transform =
+        "";
+
+
     const envelopeRect =
         envelope.getBoundingClientRect();
+
+
+    const viewportHeight =
+        window.innerHeight;
+
+
+    // Se a carta for mais alta que a tela (texto
+    // longo, ou fonte aumentada pelo controle
+    // A-/A+), centralizar com "transform" empurraria
+    // o topo do texto para fora da área que dá pra
+    // rolar — já que o transform é só visual e não
+    // aumenta a altura real da página, aquele trecho
+    // ficaria inacessível para sempre. Nesse caso,
+    // deixamos a carta na posição natural do fluxo da
+    // página, para a rolagem normal do navegador
+    // alcançar do início ao fim do texto.
+
+    if (
+        envelopeRect.height >= viewportHeight - 40
+    ) {
+
+        return;
+
+    }
 
 
     const envelopeCenter =
@@ -384,7 +473,7 @@ function centerEnvelope() {
 
 
     const viewportCenter =
-        window.innerHeight / 2;
+        viewportHeight / 2;
 
 
     const difference =
@@ -518,8 +607,17 @@ async function openLetter(
     }
 
 
+    const requestId =
+        ++openLetterRequestId;
+
+
     selectedLevel =
         level;
+
+
+    selectLevelButton(
+        level
+    );
 
 
     try {
@@ -542,6 +640,23 @@ async function openLetter(
                 level,
                 day
             );
+
+
+        // Se, enquanto esperávamos o texto chegar,
+        // outra chamada mais recente a esta função
+        // já começou (ex.: o usuário clicou em outro
+        // dia do calendário rapidamente), esta
+        // resposta está desatualizada — descartamos
+        // para não sobrescrever o texto certo com um
+        // errado chegando fora de ordem.
+
+        if (
+            requestId !== openLetterRequestId
+        ) {
+
+            return;
+
+        }
 
 
         currentText =
@@ -638,6 +753,15 @@ async function openLetter(
     } catch (
         error
     ) {
+
+
+        if (
+            requestId !== openLetterRequestId
+        ) {
+
+            return;
+
+        }
 
 
         console.error(
@@ -1110,25 +1234,26 @@ async function enableOffline() {
     try {
 
 
-        await downloadOfflineLibrary(
-            (
-                completed,
-                total
-            ) => {
+        const saved =
+            await downloadOfflineLibrary(
+                (
+                    completed,
+                    total
+                ) => {
 
 
-                const percentage =
-                    Math.round(
-                        completed / total * 100
+                    const percentage =
+                        Math.round(
+                            completed / total * 100
+                        );
+
+
+                    updateOfflineStatus(
+                        `Verificando textos disponíveis: ${percentage}%`
                     );
 
-
-                updateOfflineStatus(
-                    `Biblioteca offline: ${percentage}%`
-                );
-
-            }
-        );
+                }
+            );
 
 
         setOfflineEnabled(
@@ -1137,7 +1262,9 @@ async function enableOffline() {
 
 
         updateOfflineStatus(
-            "Textos disponíveis offline."
+            saved > 0 ?
+                `${saved} texto${saved === 1 ? "" : "s"} salvos para leitura offline.` :
+                "Nenhum texto disponível para salvar ainda."
         );
 
 
@@ -1245,90 +1372,162 @@ offlineToggle.addEventListener(
 
 
 /* =========================================
-   RESIZE
+   AJUSTE DE ALTURA DA CARTA (FASE 9)
 
-   No celular, rolar a tela faz a barra de
-   endereço do navegador esconder/aparecer,
-   o que dispara "resize" repetidamente e só
-   muda a altura da janela (não a largura).
-   Sem esse cuidado, isso recalculava e
-   recentralizava o envelope a cada disparo,
-   causando o engasgo relatado ao ler a carta
-   no celular.
+   Problema original: a altura do envelope era
+   calculada uma única vez, logo após inserir o
+   texto no DOM. Se a fonte da carta (ex.: "Momo
+   Signature", no nível 1) ainda não tivesse
+   carregado nesse instante, o cálculo usava a
+   fonte substituta (mais compacta) — e quando a
+   fonte de verdade carregava depois, o texto
+   ficava mais alto, mas a altura do envelope
+   nunca era corrigida. Resultado: o texto
+   "vazava" para fora da carta, cobrindo o botão
+   "Ler outro texto" (parecendo uma trava/engasgo).
 
-   Correção: (1) só reage depois que os disparos
-   param por um instante (debounce), e (2) só
-   recentraliza a carta se a LARGURA mudou de
-   verdade (rotação de tela, redimensionamento
-   real) — variações só de altura apenas
-   reajustam o tamanho do envelope, sem mover
-   a carta debaixo do usuário enquanto ele lê.
+   O mesmo problema, por tabela, também causava
+   parte do engasgo ao rolar no celular: qualquer
+   evento de "resize" (inclusive a barra de
+   endereço escondendo/aparecendo) disparava um
+   novo cálculo e reiniciava a transição CSS de
+   "height", mesmo sem o conteúdo ter mudado.
+
+   Solução: em vez de reagir ao "resize" da janela,
+   observamos diretamente o tamanho renderizado da
+   carta (ResizeObserver). Isso só dispara quando o
+   conteúdo de fato muda de tamanho — troca de
+   fonte, texto novo, controle de tamanho de fonte,
+   ou reflow por rotação de tela — nunca por causa
+   da barra de endereço do navegador (que não afeta
+   a largura/altura da carta em si).
 ========================================= */
 
 let lastWindowWidth =
     window.innerWidth;
 
 
-let resizeDebounceId =
-    null;
+const envelopeResizeObserver =
+    new ResizeObserver(
+        () => {
 
+
+            if (
+                !envelopeOpen
+            ) {
+
+                return;
+
+            }
+
+
+            const changed =
+                resizeEnvelope();
+
+
+            const widthChanged =
+                window.innerWidth !== lastWindowWidth;
+
+
+            lastWindowWidth =
+                window.innerWidth;
+
+
+            if (
+                changed ||
+                widthChanged
+            ) {
+
+                requestAnimationFrame(
+                    () => {
+
+                        centerEnvelope();
+
+                    }
+                );
+
+            }
+
+        }
+    );
+
+
+envelopeResizeObserver.observe(
+    letter
+);
+
+
+// Reforço: garante o recálculo assim que as
+// fontes customizadas (ex.: Momo Signature)
+// terminarem de carregar, mesmo em navegadores
+// cujo ResizeObserver demore a perceber a troca.
+
+if (
+    document.fonts &&
+    document.fonts.ready
+) {
+
+
+    document.fonts.ready.then(
+        () => {
+
+
+            if (
+                envelopeOpen
+            ) {
+
+                resizeEnvelope();
+
+            }
+
+        }
+    );
+
+}
+
+
+// Reforço extra para rotação de tela: alguns
+// navegadores mobile só reportam as dimensões
+// finais da tela um instante depois do evento.
 
 window.addEventListener(
-    "resize",
+    "orientationchange",
     () => {
 
 
-        if (
-            !envelopeOpen
-        ) {
-
-            return;
-
-        }
+        window.setTimeout(
+            () => {
 
 
-        window.clearTimeout(
-            resizeDebounceId
-        );
+                if (
+                    !envelopeOpen
+                ) {
+
+                    return;
+
+                }
 
 
-        resizeDebounceId =
-            window.setTimeout(
-                () => {
+                resizeEnvelope();
 
 
-                    resizeEnvelope();
+                requestAnimationFrame(
+                    () => {
 
-
-                    const widthChanged =
-                        window.innerWidth !== lastWindowWidth;
-
-
-                    lastWindowWidth =
-                        window.innerWidth;
-
-
-                    if (
-                        widthChanged
-                    ) {
-
-                        requestAnimationFrame(
-                            () => {
-
-                                centerEnvelope();
-
-                            }
-                        );
+                        centerEnvelope();
 
                     }
+                );
 
 
-                },
-                150
-            );
+            },
+            300
+        );
 
     }
 );
+
+
 
 
 /* =========================================
@@ -1431,6 +1630,19 @@ initInstallPrompt(
         section: installSection,
         button: installButton,
         iosTip: installIosTip
+    }
+);
+
+
+/* =========================================
+   CONTROLE DE TAMANHO DE FONTE (FASE 9)
+========================================= */
+
+initFontSizeControl(
+    {
+        decreaseButton: fontDecreaseButton,
+        resetButton: fontResetButton,
+        increaseButton: fontIncreaseButton
     }
 );
 

@@ -24,10 +24,6 @@ const LEVELS = [
 ];
 
 
-const TOTAL_TEXTS =
-    LEVELS.length * 366;
-
-
 /* =========================================
    BANCO
 ========================================= */
@@ -303,6 +299,10 @@ export async function downloadOfflineLibrary(
         0;
 
 
+    let saved =
+        0;
+
+
     const concurrency =
         8;
 
@@ -327,36 +327,65 @@ export async function downloadOfflineLibrary(
                 async task => {
 
 
-                    const path =
-                        `textos/${task.level}/${task.day}.md`;
+                    // Nem todo dia do ano tem
+                    // texto pronto ainda — os
+                    // textos são escritos aos
+                    // poucos, não o ano inteiro
+                    // de uma vez. Por isso, um
+                    // arquivo que ainda não existe
+                    // (404) é esperado e não deve
+                    // interromper o download dos
+                    // demais — só arquivos que
+                    // já existem são salvos.
+
+                    try {
 
 
-                    const response =
-                        await fetch(
-                            path
-                        );
+                        const path =
+                            `textos/${task.level}/${task.day}.md`;
 
 
-                    if (
-                        !response.ok
+                        const response =
+                            await fetch(
+                                path
+                            );
+
+
+                        if (
+                            response.ok
+                        ) {
+
+
+                            const content =
+                                await response.text();
+
+
+                            await saveText(
+                                task.level,
+                                task.day,
+                                content
+                            );
+
+
+                            saved++;
+
+                        }
+
+
+                    } catch (
+                        error
                     ) {
 
-                        throw new Error(
-                            `Texto não encontrado: ${path}`
+                        // Falha de rede pontual em
+                        // um único arquivo também
+                        // não deve derrubar o resto
+                        // do download.
+
+                        console.error(
+                            error
                         );
 
                     }
-
-
-                    const content =
-                        await response.text();
-
-
-                    await saveText(
-                        task.level,
-                        task.day,
-                        content
-                    );
 
 
                     completed++;
@@ -369,7 +398,8 @@ export async function downloadOfflineLibrary(
 
                         onProgress(
                             completed,
-                            TOTAL_TEXTS
+                            tasks.length,
+                            saved
                         );
 
                     }
@@ -380,6 +410,9 @@ export async function downloadOfflineLibrary(
         );
 
     }
+
+
+    return saved;
 
 }
 

@@ -1,5 +1,5 @@
 const CACHE_NAME =
-    "textododia-shell-v7";
+    "textododia-shell-v9";
 
 
 const CORE_ASSETS = [
@@ -17,6 +17,7 @@ const CORE_ASSETS = [
     "./js/history-ui.js",
     "./js/streak-ui.js",
     "./js/install-ui.js",
+    "./js/font-size-ui.js",
     "./js/metadata.js",
     "./js/envelope.js",
     "./js/offline.js",
